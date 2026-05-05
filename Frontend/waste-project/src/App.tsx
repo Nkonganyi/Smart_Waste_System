@@ -7,6 +7,8 @@ import { RegisterPage } from '@/pages/RegisterPage'
 import { CitizenDashboard } from '@/pages/CitizenDashboard'
 import { CollectorDashboard } from '@/pages/CollectorDashboard'
 import { AdminDashboard } from '@/pages/AdminDashboard'
+import { UsersPage } from '@/pages/admin/UsersPage'
+import { ToastContainer } from '@/components/ui/ToastContainer'
 import './App.css'
 
 function HomePage() {
@@ -77,19 +79,31 @@ export default function App() {
           }
         />
 
-        {/* Stub for admin sub-pages referenced by the sidebar */}
+        <Route
+          path="/admin/users"
+          element={
+            <AdminRoute>
+              <UsersPage />
+            </AdminRoute>
+          }
+        />
+
+        {/* Catch-all for other admin sub-pages */}
         <Route
           path="/admin/*"
           element={
             <AdminRoute>
-              <div className="p-10 text-center text-gray-500">
-                <h2 className="text-2xl font-semibold mb-2">Coming Soon</h2>
-                <p>This section is under construction.</p>
+              <div className="flex h-[80vh] items-center justify-center text-center">
+                <div className="space-y-4">
+                  <h2 className="text-4xl font-bold tracking-tight">Coming Soon</h2>
+                  <p className="text-xl text-muted-foreground">This section is currently under construction.</p>
+                </div>
               </div>
             </AdminRoute>
           }
         />
       </Routes>
+      <ToastContainer />
     </Router>
   )
 }

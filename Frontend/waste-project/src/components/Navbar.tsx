@@ -47,6 +47,8 @@ export function Navbar() {
           <div className="flex items-center space-x-4">
             <span className="text-gray-700 text-sm">{user.name}</span>
             <button
+              role="button"
+              tabIndex={0}
               onClick={handleLogout}
               className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 text-sm"
             >
