@@ -6,8 +6,7 @@ import { RecentReportsTable } from '@/components/RecentReportsTable'
 import { LocationMapPreview } from '@/components/LocationMapPreview'
 import { TimeSeriesChart } from '@/components/TimeSeriesChart'
 import {
-  Trash2, Clock, CheckCircle2, Users, TrendingUp,
-  AlertTriangle, ArrowUpRight,
+  Trash2, Clock, CheckCircle2, Users, TrendingUp, ArrowUpRight,
 } from 'lucide-react'
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts'
 
@@ -51,10 +50,6 @@ export function AdminDashboard() {
   const [stats, setStats] = useState<AdminStats | null>(null)
   const [loading, setLoading] = useState(true)
 
-  const dateStr = new Date().toLocaleDateString('en-GB', {
-    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
-  })
-
   useEffect(() => {
     const fetchStats = async () => {
       try {
@@ -95,25 +90,8 @@ export function AdminDashboard() {
 
   return (
     <AdminLayout>
-      {/* ── Page Header ─────────────────────────────────────────── */}
-      <div className="flex items-start justify-between mb-7">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900 leading-tight tracking-tight">
-            Operations Dashboard
-          </h1>
-          <p className="text-sm text-gray-400 mt-1">{dateStr}</p>
-        </div>
-        {(stats?.highPriority ?? 0) > 0 && (
-          <div className="flex items-center gap-2 bg-red-50 border border-red-200 text-red-700 text-sm font-medium px-4 py-2.5 rounded-xl">
-            <AlertTriangle size={15} />
-            {stats!.highPriority} high-priority report
-            {stats!.highPriority !== 1 ? 's' : ''} pending
-          </div>
-        )}
-      </div>
-
       {/* ── KPI Cards ────────────────────────────────────────────── */}
-      <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
+      <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-7">
         <KPICard
           icon={Trash2}
           iconBg="bg-emerald-50"

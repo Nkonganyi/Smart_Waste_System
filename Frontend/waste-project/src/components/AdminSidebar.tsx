@@ -66,28 +66,11 @@ export function AdminSidebar() {
   return (
     <aside
       className={`bg-gray-950 text-gray-100 flex flex-col h-screen sticky top-0 overflow-hidden transition-all duration-300 ${
-        isOpen ? 'w-64' : 'w-[68px]'
+        isOpen ? 'w-64' : 'w-20'
       }`}
     >
-      {/* ── Branding ─────────────────────────────────────── */}
-      <div
-        className={`flex items-center gap-3 border-b border-gray-800/60 flex-shrink-0 ${
-          isOpen ? 'px-5 py-4' : 'justify-center px-0 py-4'
-        }`}
-      >
-        <div className="w-9 h-9 bg-emerald-500 rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg shadow-emerald-500/25">
-          <Recycle size={18} className="text-white" />
-        </div>
-        {isOpen && (
-          <div>
-            <p className="text-sm font-bold text-white leading-tight tracking-tight">SmartWaste</p>
-            <p className="text-xs text-gray-500 mt-0.5">Admin Portal</p>
-          </div>
-        )}
-      </div>
-
       {/* ── Navigation ───────────────────────────────────── */}
-      <nav className="flex-1 px-3 py-5 space-y-5 overflow-y-auto scrollbar-none">
+      <nav className="flex-1 px-3 py-6 space-y-6 overflow-y-auto scrollbar-none">
         {menuItems.map((section) => (
           <div key={section.section}>
             {isOpen && (
