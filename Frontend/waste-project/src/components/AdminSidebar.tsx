@@ -10,67 +10,92 @@ import {
   Users,
   Settings,
   Bell,
+  Recycle,
+  LogOut,
 } from 'lucide-react'
 import { useAuthStore } from '@/stores/authStore'
 import { useSidebar } from '@/contexts/SidebarContext'
+import { useNavigate } from 'react-router-dom'
+
+const menuItems = [
+  {
+    section: 'MAIN',
+    items: [
+      { label: 'Dashboard', icon: LayoutDashboard, path: '/admin' },
+    ],
+  },
+  {
+    section: 'MANAGEMENT',
+    items: [
+      { label: 'Reports', icon: FileText, path: '/admin/reports' },
+      { label: 'Routes', icon: Route, path: '/admin/routes' },
+      { label: 'Priority Queue', icon: Zap, path: '/admin/priority-queue' },
+      { label: 'Collections', icon: Package, path: '/admin/collections' },
+    ],
+  },
+  {
+    section: 'ANALYTICS',
+    items: [
+      { label: 'Performance', icon: BarChart3, path: '/admin/performance' },
+      { label: 'Activity Logs', icon: Clock, path: '/admin/activity-logs' },
+    ],
+  },
+  {
+    section: 'SYSTEM',
+    items: [
+      { label: 'Users', icon: Users, path: '/admin/users' },
+      { label: 'Settings', icon: Settings, path: '/admin/settings' },
+      { label: 'Notifications', icon: Bell, path: '/admin/notifications' },
+    ],
+  },
+]
 
 export function AdminSidebar() {
   const location = useLocation()
-  const user = useAuthStore((state) => state.user)
+  const navigate = useNavigate()
+  const { user, logout } = useAuthStore()
   const { isOpen } = useSidebar()
 
   const isActive = (path: string) => location.pathname === path
 
-  const menuItems = [
-    {
-      section: 'MAIN',
-      items: [
-        { label: 'Dashboard', icon: LayoutDashboard, path: '/admin' },
-      ],
-    },
-    {
-      section: 'MANAGEMENT',
-      items: [
-        { label: 'Reports', icon: FileText, path: '/admin/reports' },
-        { label: 'Routes', icon: Route, path: '/admin/routes' },
-        { label: 'Priority Queue', icon: Zap, path: '/admin/priority-queue' },
-        { label: 'Collections', icon: Package, path: '/admin/collections' },
-      ],
-    },
-    {
-      section: 'ANALYTICS',
-      items: [
-        { label: 'Performance', icon: BarChart3, path: '/admin/performance' },
-        { label: 'Activity Logs', icon: Clock, path: '/admin/activity-logs' },
-      ],
-    },
-    {
-      section: 'SYSTEM',
-      items: [
-        { label: 'Users', icon: Users, path: '/admin/users' },
-        { label: 'Settings', icon: Settings, path: '/admin/settings' },
-        { label: 'Notifications', icon: Bell, path: '/admin/notifications' },
-      ],
-    },
-  ]
+  const handleLogout = () => {
+    logout()
+    navigate('/login')
+  }
 
   return (
-    <aside className={`bg-gray-900 text-gray-100 flex flex-col h-screen sticky top-0 overflow-hidden transition-all duration-300 ${
-      isOpen ? 'w-64' : 'w-20'
-    }`}>
-      {/* Menu Items */}
-      <nav className="flex-1 px-4 py-6 space-y-6 overflow-y-auto">
+    <aside
+      className={`bg-gray-950 text-gray-100 flex flex-col h-screen sticky top-0 overflow-hidden transition-all duration-300 ${
+        isOpen ? 'w-64' : 'w-[68px]'
+      }`}
+    >
+      {/* ── Branding ─────────────────────────────────────── */}
+      <div
+        className={`flex items-center gap-3 border-b border-gray-800/60 flex-shrink-0 ${
+          isOpen ? 'px-5 py-4' : 'justify-center px-0 py-4'
+        }`}
+      >
+        <div className="w-9 h-9 bg-emerald-500 rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg shadow-emerald-500/25">
+          <Recycle size={18} className="text-white" />
+        </div>
+        {isOpen && (
+          <div>
+            <p className="text-sm font-bold text-white leading-tight tracking-tight">SmartWaste</p>
+            <p className="text-xs text-gray-500 mt-0.5">Admin Portal</p>
+          </div>
+        )}
+      </div>
+
+      {/* ── Navigation ───────────────────────────────────── */}
+      <nav className="flex-1 px-3 py-5 space-y-5 overflow-y-auto scrollbar-none">
         {menuItems.map((section) => (
           <div key={section.section}>
-            {/* Section Header - Always Visible */}
-            <div className={`px-4 py-2 text-xs font-semibold text-gray-400 uppercase tracking-wider ${
-              !isOpen && 'hidden'
-            }`}>
-              {section.section}
-            </div>
-
-            {/* Section Items */}
-            <div className="space-y-1">
+            {isOpen && (
+              <p className="px-3 mb-2 text-[10px] font-bold text-gray-600 uppercase tracking-widest">
+                {section.section}
+              </p>
+            )}
+            <div className="space-y-0.5">
               {section.items.map((item) => {
                 const Icon = item.icon
                 const active = isActive(item.path)
@@ -78,15 +103,17 @@ export function AdminSidebar() {
                   <Link
                     key={item.path}
                     to={item.path}
-                    title={!isOpen ? item.label : ''}
-                    className={`flex items-center gap-3 px-4 py-2 rounded-lg transition ${
+                    title={!isOpen ? item.label : undefined}
+                    className={`flex items-center gap-3 rounded-xl transition-all duration-150 ${
+                      isOpen ? 'px-3 py-2.5' : 'justify-center py-2.5 px-0'
+                    } ${
                       active
-                        ? 'bg-blue-600 text-white'
-                        : 'text-gray-300 hover:bg-gray-800'
-                    } ${!isOpen && 'justify-center'}`}
+                        ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/30'
+                        : 'text-gray-400 hover:bg-gray-800/70 hover:text-gray-100'
+                    }`}
                   >
-                    <Icon size={20} />
-                    {isOpen && <span className="text-sm">{item.label}</span>}
+                    <Icon size={18} className="flex-shrink-0" />
+                    {isOpen && <span className="text-sm font-medium">{item.label}</span>}
                   </Link>
                 )
               })}
@@ -95,26 +122,41 @@ export function AdminSidebar() {
         ))}
       </nav>
 
-      {/* User Profile Section */}
-      <div className="p-4 border-t border-gray-700">
-        <div className="bg-gray-800 rounded-lg p-4">
-          <div className={`flex items-center ${isOpen ? 'gap-3' : 'justify-center'} mb-2`}>
-            <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0">
-              {user?.name?.charAt(0).toUpperCase()}
-            </div>
-            {isOpen && (
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold text-white truncate">{user?.name}</p>
-                <p className="text-xs text-gray-400 capitalize">{user?.role}</p>
-              </div>
-            )}
+      {/* ── User Footer ──────────────────────────────────── */}
+      <div className={`border-t border-gray-800/60 flex-shrink-0 ${isOpen ? 'p-4' : 'p-3'}`}>
+        <div
+          className={`flex items-center bg-gray-900 rounded-xl ${
+            isOpen ? 'gap-3 px-3 py-3' : 'justify-center p-2.5'
+          }`}
+        >
+          <div className="w-8 h-8 bg-emerald-600 rounded-lg flex items-center justify-center font-bold text-sm text-white flex-shrink-0">
+            {user?.name?.charAt(0).toUpperCase()}
           </div>
           {isOpen && (
-            <button className="w-full text-xs text-gray-400 hover:text-gray-200 transition text-left py-1">
-              View Profile
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-semibold text-white truncate leading-tight">{user?.name}</p>
+              <p className="text-xs text-gray-500 capitalize mt-0.5">{user?.role}</p>
+            </div>
+          )}
+          {isOpen && (
+            <button
+              onClick={handleLogout}
+              title="Logout"
+              className="p-1.5 text-gray-500 hover:text-red-400 hover:bg-gray-800 rounded-lg transition-colors flex-shrink-0"
+            >
+              <LogOut size={15} />
             </button>
           )}
         </div>
+        {!isOpen && (
+          <button
+            onClick={handleLogout}
+            title="Logout"
+            className="w-full flex items-center justify-center mt-1.5 p-2 text-gray-600 hover:text-red-400 hover:bg-gray-800 rounded-xl transition-colors"
+          >
+            <LogOut size={15} />
+          </button>
+        )}
       </div>
     </aside>
   )

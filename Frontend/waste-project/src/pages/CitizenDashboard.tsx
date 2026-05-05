@@ -18,6 +18,7 @@ export function CitizenDashboard() {
   const [loading, setLoading] = useState(true)
   const [showReportForm, setShowReportForm] = useState(false)
   const [formData, setFormData] = useState({
+    title: '',
     location: '',
     description: '',
     priority: 'normal',
@@ -45,20 +46,21 @@ export function CitizenDashboard() {
     setSubmitting(true)
 
     try {
-      let imageUrl = ''
+      let imageUrl: string | undefined
       if (formData.image) {
         const uploadResponse = await uploadAPI.uploadImage(formData.image)
         imageUrl = uploadResponse.data.url
       }
 
       await reportsAPI.create({
+        title: formData.title,
         location: formData.location,
         description: formData.description,
         priority: formData.priority,
         image_url: imageUrl,
-      } as any)
+      })
 
-      setFormData({ location: '', description: '', priority: 'normal', image: null })
+      setFormData({ title: '', location: '', description: '', priority: 'normal', image: null })
       setShowReportForm(false)
       await fetchReports()
     } catch (err) {
@@ -92,6 +94,17 @@ export function CitizenDashboard() {
             <h2 className="text-lg font-semibold text-gray-900 mb-4">Report Waste</h2>
             <form onSubmit={handleSubmitReport} className="space-y-4">
               <div>
+                <label className="block text-sm font-medium text-gray-700">Title</label>
+                <input
+                  type="text"
+                  required
+                  value={formData.title}
+                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                  className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Brief title, e.g. Overflowing bin on Main St"
+                />
+              </div>
+              <div>
                 <label className="block text-sm font-medium text-gray-700">Location</label>
                 <input
                   type="text"
@@ -118,6 +131,7 @@ export function CitizenDashboard() {
               <div>
                 <label className="block text-sm font-medium text-gray-700">Priority</label>
                 <select
+                  title="Priority"
                   value={formData.priority}
                   onChange={(e) => setFormData({ ...formData, priority: e.target.value })}
                   className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -132,6 +146,7 @@ export function CitizenDashboard() {
                 <label className="block text-sm font-medium text-gray-700">Image</label>
                 <input
                   type="file"
+                  title="Upload waste image"
                   accept="image/*"
                   onChange={(e) => setFormData({ ...formData, image: e.target.files?.[0] || null })}
                   className="mt-1 w-full"

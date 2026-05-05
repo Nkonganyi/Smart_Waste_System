@@ -180,7 +180,7 @@ exports.createReport = async (req, res) => {
             })
         }
 
-        // Handle image upload if file is provided
+        // Handle image: either an inline file upload or a pre-uploaded URL from /api/upload
         let imageUrl = null
 
         if (req.file) {
@@ -201,6 +201,9 @@ exports.createReport = async (req, res) => {
                 .getPublicUrl(fileName)
 
             imageUrl = publicUrl.publicUrl
+        } else if (req.body.image_url && typeof req.body.image_url === "string") {
+            // Accept a pre-uploaded URL (sent as JSON from the frontend)
+            imageUrl = req.body.image_url
         }
 
         // Geocode location (Graceful failure)

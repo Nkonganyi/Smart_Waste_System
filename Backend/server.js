@@ -94,25 +94,34 @@ app.post(
 )
 
 /* -------------------------------------------------------------------------- */
-/*                               STATIC ASSETS                                */
+/*                               STATIC ASSETS (React SPA)                    */
 /* -------------------------------------------------------------------------- */
 
-// Landing page
-app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "Frontend", "Home.html"));
-});
+// Serve the built React app from Vite's dist output
+const clientDistPath = path.join(__dirname, '..', 'Frontend', 'waste-project', 'dist')
+app.use(express.static(clientDistPath))
 
-// Serve static files AFTER API routes to prevent shadowing
-app.use(express.static('./Frontend'))
+// SPA fallback — all non-API GET requests return index.html so React Router handles routing
+app.get('/{*path}', (req, res, next) => {
+    // Let API 404 handler deal with unknown /api/* paths
+    if (req.url.startsWith('/api')) return next()
 
-// Explicit pages for clean routing
-const pages = ["login", "register", "profile", "verify-email", "reset-password", "admin", "home", "citizen", "collector"];
-pages.forEach(page => {
-    const fileName = (page === "login") ? "index.html" : `${page}.html`;
-    app.get(`/${page}`, (req, res) => {
-        res.sendFile(path.join(__dirname, "Frontend", fileName));
-    });
-});
+    const indexFile = path.join(clientDistPath, 'index.html')
+    res.sendFile(indexFile, (err) => {
+        if (err) {
+            // React app has not been built yet — show a helpful dev message
+            res.status(200).send(`
+                <div style="font-family:sans-serif;padding:40px;">
+                    <h2>Smart Waste System — API Running ✅</h2>
+                    <p>The React frontend is not built yet.</p>
+                    <p>To build: <code>cd Frontend/waste-project && npm install && npm run build</code></p>
+                    <p>Or run the dev server separately: <code>npm run dev</code> (port 5173)</p>
+                    <p>API health check: <a href="/api/ping">/api/ping</a></p>
+                </div>
+            `)
+        }
+    })
+})
 
 /* -------------------------------------------------------------------------- */
 /*                               ERROR HANDLING                               */

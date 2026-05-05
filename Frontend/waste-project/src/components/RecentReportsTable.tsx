@@ -4,12 +4,26 @@ import { ChevronRight } from 'lucide-react'
 
 interface Report {
   id: string
+  title?: string
   location: string
   description: string
   priority: string
   status: string
   created_at: string
-  image_url?: string
+}
+
+const STATUS_STYLES: Record<string, string> = {
+  completed: 'bg-emerald-100 text-emerald-800',
+  in_progress: 'bg-blue-100 text-blue-800',
+  pending: 'bg-amber-100 text-amber-800',
+  approved: 'bg-purple-100 text-purple-800',
+  rejected: 'bg-red-100 text-red-700',
+}
+
+const PRIORITY_DOT: Record<string, string> = {
+  high: 'bg-red-500',
+  normal: 'bg-blue-400',
+  low: 'bg-emerald-400',
 }
 
 export function RecentReportsTable() {
@@ -20,101 +34,68 @@ export function RecentReportsTable() {
   useEffect(() => {
     const fetchReports = async () => {
       try {
-        // Try to fetch all reports (admin endpoint)
-        // If that fails (not admin), fall back to user's own reports
         try {
-          const response = await reportsAPI.getAllReports()
-          setReports(response.data?.slice(0, 5) || [])
-        } catch (adminError) {
-          // Fallback to user's own reports if getAllReports fails
-          const response = await reportsAPI.getMyReports()
-          setReports(response.data?.slice(0, 5) || [])
+          const res = await reportsAPI.getAllReports()
+          setReports(res.data?.slice(0, 5) || [])
+        } catch {
+          const res = await reportsAPI.getMyReports()
+          setReports(res.data?.slice(0, 5) || [])
         }
-      } catch (err) {
-        console.error('Failed to fetch reports:', err)
+      } catch {
         setError('Failed to load reports')
       } finally {
         setLoading(false)
       }
     }
-
     fetchReports()
   }, [])
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'completed':
-        return 'bg-green-100 text-green-800'
-      case 'in_progress':
-        return 'bg-blue-100 text-blue-800'
-      case 'pending':
-        return 'bg-yellow-100 text-yellow-800'
-      case 'approved':
-        return 'bg-purple-100 text-purple-800'
-      default:
-        return 'bg-gray-100 text-gray-800'
-    }
-  }
-
-  const getPriorityColor = (priority: string) => {
-    switch (priority) {
-      case 'high':
-        return 'text-red-600'
-      case 'normal':
-        return 'text-blue-600'
-      case 'low':
-        return 'text-green-600'
-      default:
-        return 'text-gray-600'
-    }
-  }
-
-  if (loading) {
-    return <div className="h-64 flex items-center justify-center text-gray-400">Loading...</div>
-  }
-
-  if (error) {
-    return <div className="h-64 flex items-center justify-center text-red-500">{error}</div>
-  }
-
-  if (!reports || reports.length === 0) {
-    return <div className="h-64 flex items-center justify-center text-gray-400">No reports available</div>
-  }
+  if (loading) return <div className="h-52 flex items-center justify-center text-sm text-gray-400">Loading…</div>
+  if (error) return <div className="h-52 flex items-center justify-center text-sm text-red-400">{error}</div>
+  if (!reports.length) return <div className="h-52 flex items-center justify-center text-sm text-gray-400">No reports yet</div>
 
   return (
     <div className="overflow-x-auto">
       <table className="w-full">
         <thead>
-          <tr className="border-b border-gray-200 bg-gray-50">
-            <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Location</th>
-            <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Description</th>
-            <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Priority</th>
-            <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Status</th>
-            <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Date</th>
-            <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Action</th>
+          <tr className="border-b border-gray-100 bg-gray-50/60">
+            <th className="px-5 py-3 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider">Location</th>
+            <th className="px-5 py-3 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider hidden md:table-cell">Description</th>
+            <th className="px-5 py-3 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider">Priority</th>
+            <th className="px-5 py-3 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider">Status</th>
+            <th className="px-5 py-3 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider hidden sm:table-cell">Date</th>
+            <th className="px-5 py-3" />
           </tr>
         </thead>
-        <tbody className="divide-y divide-gray-200">
+        <tbody className="divide-y divide-gray-50">
           {reports.map((report) => (
-            <tr key={report.id} className="hover:bg-gray-50 transition">
-              <td className="px-6 py-3 text-sm font-medium text-gray-900">{report.location}</td>
-              <td className="px-6 py-3 text-sm text-gray-600 truncate max-w-xs">{report.description}</td>
-              <td className="px-6 py-3 text-sm">
-                <span className={`font-semibold uppercase text-xs ${getPriorityColor(report.priority)}`}>
-                  {report.priority}
+            <tr key={report.id} className="hover:bg-gray-50/70 transition-colors">
+              <td className="px-5 py-3.5 text-sm font-medium text-gray-900 whitespace-nowrap">
+                {report.title || report.location}
+                {report.title && (
+                  <p className="text-xs text-gray-400 font-normal mt-0.5">{report.location}</p>
+                )}
+              </td>
+              <td className="px-5 py-3.5 text-sm text-gray-500 hidden md:table-cell max-w-xs">
+                <span className="line-clamp-1">{report.description}</span>
+              </td>
+              <td className="px-5 py-3.5 text-sm">
+                <span className="flex items-center gap-1.5">
+                  <span className={`w-2 h-2 rounded-full flex-shrink-0 ${PRIORITY_DOT[report.priority] ?? 'bg-gray-300'}`} />
+                  <span className="text-xs font-semibold text-gray-600 capitalize">{report.priority}</span>
                 </span>
               </td>
-              <td className="px-6 py-3 text-sm">
-                <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(report.status)}`}>
+              <td className="px-5 py-3.5 text-sm">
+                <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${STATUS_STYLES[report.status] ?? 'bg-gray-100 text-gray-700'}`}>
                   {report.status.replace('_', ' ')}
                 </span>
               </td>
-              <td className="px-6 py-3 text-sm text-gray-600">
-                {new Date(report.created_at).toLocaleDateString()}
+              <td className="px-5 py-3.5 text-xs text-gray-400 hidden sm:table-cell whitespace-nowrap">
+                {new Date(report.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}
               </td>
-              <td className="px-6 py-3 text-sm">
-                <button className="text-blue-600 hover:text-blue-800 font-medium flex items-center gap-1 transition">
-                  View <ChevronRight size={16} />
+              <td className="px-5 py-3.5">
+                <button title="View report" className="text-emerald-600 hover:text-emerald-800 transition-colors flex items-center gap-0.5">
+                  <ChevronRight size={16} />
                 </button>
               </td>
             </tr>

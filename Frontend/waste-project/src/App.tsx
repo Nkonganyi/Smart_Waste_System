@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import { useAuthStore } from '@/stores/authStore'
 import { Navbar } from '@/components/Navbar'
-import { ProtectedRoute, AdminRoute, CollectorRoute } from '@/components/ProtectedRoute'
+import { AdminRoute, CollectorRoute, CitizenRoute } from '@/components/ProtectedRoute'
 import { LoginPage } from '@/pages/LoginPage'
 import { RegisterPage } from '@/pages/RegisterPage'
 import { CitizenDashboard } from '@/pages/CitizenDashboard'
@@ -53,9 +53,9 @@ export default function App() {
         <Route
           path="/citizen"
           element={
-            <ProtectedRoute>
+            <CitizenRoute>
               <CitizenDashboard />
-            </ProtectedRoute>
+            </CitizenRoute>
           }
         />
 
@@ -73,6 +73,19 @@ export default function App() {
           element={
             <AdminRoute>
               <AdminDashboard />
+            </AdminRoute>
+          }
+        />
+
+        {/* Stub for admin sub-pages referenced by the sidebar */}
+        <Route
+          path="/admin/*"
+          element={
+            <AdminRoute>
+              <div className="p-10 text-center text-gray-500">
+                <h2 className="text-2xl font-semibold mb-2">Coming Soon</h2>
+                <p>This section is under construction.</p>
+              </div>
             </AdminRoute>
           }
         />

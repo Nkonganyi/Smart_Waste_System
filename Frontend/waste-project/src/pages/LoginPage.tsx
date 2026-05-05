@@ -18,8 +18,7 @@ export function LoginPage() {
     try {
       const response = await authAPI.login(formData)
       const { user, token } = response.data
-      login(user, token)
-      localStorage.setItem('auth_token', token)
+      login(user, token) // also writes token to localStorage internally
       navigate('/')
     } catch (err: any) {
       setError(err.response?.data?.message || 'Login failed')

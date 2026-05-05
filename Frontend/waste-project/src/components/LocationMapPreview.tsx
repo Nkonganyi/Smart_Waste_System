@@ -2,8 +2,9 @@ import { useEffect, useState } from 'react'
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
+import { reportsAPI } from '@/lib/api'
 
-// Fix Leaflet marker icon issue
+// Fix Leaflet default marker icon paths (webpack/vite asset issue)
 delete (L.Icon.Default.prototype as any)._getIconUrl
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon-2x.png',
@@ -25,64 +26,57 @@ export function LocationMapPreview() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // Simulate fetching report locations
-    // In production, this would fetch from backend
-    const mockLocations: ReportLocation[] = [
-      {
-        id: '1',
-        location: 'Main Street',
-        latitude: 4.1537,
-        longitude: 9.2685,
-        priority: 'high',
-        status: 'pending',
-      },
-      {
-        id: '2',
-        location: 'Park Avenue',
-        latitude: 4.1545,
-        longitude: 9.2695,
-        priority: 'normal',
-        status: 'in_progress',
-      },
-      {
-        id: '3',
-        location: 'Market Square',
-        latitude: 4.1525,
-        longitude: 9.2675,
-        priority: 'low',
-        status: 'completed',
-      },
-    ]
-    setLocations(mockLocations)
-    setLoading(false)
+    const fetchLocations = async () => {
+      try {
+        const res = await reportsAPI.getAllReports()
+        const withCoords = (res.data || [])
+          .filter((r: any) => r.latitude && r.longitude)
+          .map((r: any) => ({
+            id: r.id,
+            location: r.location,
+            latitude: Number(r.latitude),
+            longitude: Number(r.longitude),
+            priority: r.priority,
+            status: r.status,
+          }))
+        setLocations(withCoords)
+      } catch (err) {
+        console.error('Failed to fetch map locations:', err)
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchLocations()
   }, [])
 
+  const center: [number, number] =
+    locations.length > 0
+      ? [locations[0].latitude, locations[0].longitude]
+      : [4.1537, 9.2685] // Buea default
+
   if (loading) {
-    return <div className="h-80 flex items-center justify-center text-gray-400">Loading map...</div>
+    return (
+      <div className="h-52 flex items-center justify-center text-sm text-gray-400 bg-gray-50">
+        Loading map…
+      </div>
+    )
   }
 
-  const center: [number, number] = [4.1537, 9.2685] // Default to Buea
-
   return (
-    <div className="h-80 rounded-lg overflow-hidden border border-gray-200">
-      <MapContainer
-        center={center}
-        zoom={13}
-        style={{ height: '100%', width: '100%' }}
-      >
+    <div className="h-52">
+      <MapContainer center={center} zoom={13} style={{ height: '100%', width: '100%' }}>
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        {locations.map((location) => (
-          <Marker key={location.id} position={[location.latitude, location.longitude]}>
+        {locations.map((loc) => (
+          <Marker key={loc.id} position={[loc.latitude, loc.longitude]}>
             <Popup>
-              <div className="text-sm">
-                <p className="font-semibold">{location.location}</p>
-                <p className="text-xs text-gray-600">
-                  <span className="capitalize font-medium">{location.priority}</span> priority
+              <div className="text-sm min-w-32">
+                <p className="font-semibold text-gray-900">{loc.location}</p>
+                <p className="text-xs text-gray-500 capitalize mt-1">
+                  {loc.priority} priority · {loc.status.replace('_', ' ')}
                 </p>
-                <p className="text-xs text-gray-600 capitalize">{location.status.replace('_', ' ')}</p>
               </div>
             </Popup>
           </Marker>

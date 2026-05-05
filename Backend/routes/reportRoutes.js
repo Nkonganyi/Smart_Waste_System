@@ -84,12 +84,6 @@ router.put(
 router.put(
     "/reject",
     authenticate,
-    (req, res, next) => {
-        if (req.user && req.user.role !== "admin") {
-            return next("route")
-        }
-        return next()
-    },
     authorize(["admin"]),
     reportController.rejectReport
 )
@@ -107,9 +101,9 @@ router.delete(
     authorize(["admin"]),
     reportController.deleteReport
 )
-// Reject report assignment (collector only)
+// Reject report assignment (collector only) — uses distinct path to avoid shadowing admin /reject
 router.put(
-    "/reject",
+    "/reject-assignment",
     authenticate,
     authorize(["collector"]),
     reportController.rejectAssignment

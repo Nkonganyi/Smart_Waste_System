@@ -31,3 +31,13 @@ export function CollectorRoute({ children }: { children: React.ReactNode }) {
 
   return <>{children}</>
 }
+
+export function CitizenRoute({ children }: { children: React.ReactNode }) {
+  const { isAuthenticated, user } = useAuthStore()
+
+  if (!isAuthenticated || user?.role !== 'citizen') {
+    return <Navigate to="/" replace />
+  }
+
+  return <>{children}</>
+}

@@ -77,13 +77,14 @@ export function RegisterPage() {
           <div>
             <label className="block text-sm font-medium text-gray-700">Role</label>
             <select
+              title="Role"
               value={formData.role}
               onChange={(e) => setFormData({ ...formData, role: e.target.value })}
               className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="citizen">Citizen</option>
               <option value="collector">Collector</option>
-              <option value="admin">Admin</option>
+              {/* Admin accounts are provisioned directly — not self-registerable */}
             </select>
           </div>
 

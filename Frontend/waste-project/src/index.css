@@ -121,11 +121,10 @@
 }
 
 #root {
-  width: 1126px;
+  width: 100%;
   max-width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
+  margin: 0;
+  text-align: left;
   min-height: 100svh;
   display: flex;
   flex-direction: column;
@@ -263,4 +262,7 @@ code {
   body {
     @apply bg-background text-foreground;}
   html {
-    @apply font-mono;}}
+    /* Use system sans-serif for all UI text (replaces JetBrains Mono which was applied globally) */
+    font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  }
+}

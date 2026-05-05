@@ -17,18 +17,21 @@ export const authAPI = {
 
 // Reports API
 export const reportsAPI = {
-  create: (data: FormData) =>
-    apiClient.post('/reports', data, { headers: { 'Content-Type': 'multipart/form-data' } }),
+  // Send as JSON — image is pre-uploaded via uploadAPI.uploadImage() and passed as image_url string
+  create: (data: { title: string; location: string; description: string; priority: string; image_url?: string }) =>
+    apiClient.post('/reports', data),
   getMyReports: () =>
     apiClient.get('/reports/my'),
   getAllReports: () =>
     apiClient.get('/reports'),
   getAssignedReports: () =>
     apiClient.get('/reports/assigned'),
-  updateReport: (reportId: string, data: any) =>
-    apiClient.put(`/reports/${reportId}`, data),
+  // Calls the correct backend route PUT /api/reports/status
+  updateStatus: (reportId: string, status: string) =>
+    apiClient.put('/reports/status', { report_id: reportId, status }),
+  // Uses snake_case keys expected by the backend assignCollector handler
   assignCollector: (reportId: string, collectorId: string) =>
-    apiClient.post('/reports/assign', { reportId, collectorId }),
+    apiClient.post('/reports/assign', { report_id: reportId, collector_id: collectorId }),
 }
 
 // Dashboard API

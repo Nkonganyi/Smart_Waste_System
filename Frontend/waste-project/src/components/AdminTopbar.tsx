@@ -24,14 +24,19 @@ export function AdminTopbar() {
 
   return (
     <nav className="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-6 sticky top-0 z-40 shadow-sm">
-      {/* Left side - Sidebar Toggle */}
-      <button
-        onClick={toggleSidebar}
-        className="p-2 hover:bg-gray-100 rounded-lg transition"
-        title="Toggle sidebar"
-      >
-        <Menu size={24} className="text-gray-600" />
-      </button>
+      {/* Left side — Sidebar Toggle + Portal label */}
+      <div className="flex items-center gap-3">
+        <button
+          onClick={toggleSidebar}
+          className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+          title="Toggle sidebar"
+        >
+          <Menu size={22} className="text-gray-600" />
+        </button>
+        <span className="text-sm font-semibold text-gray-500 hidden sm:inline tracking-wide">
+          Waste Management System
+        </span>
+      </div>
 
       {/* Right side - Actions */}
       <div className="flex items-center gap-6">
@@ -48,7 +53,7 @@ export function AdminTopbar() {
         </div>
 
         {/* Notifications */}
-        <button className="relative p-2 hover:bg-gray-100 rounded-lg transition">
+        <button title="Notifications" className="relative p-2 hover:bg-gray-100 rounded-lg transition">
           <Bell size={20} className="text-gray-600" />
           <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
         </button>
@@ -72,7 +77,7 @@ export function AdminTopbar() {
             onClick={() => setShowUserMenu(!showUserMenu)}
             className="flex items-center gap-2 p-2 hover:bg-gray-100 rounded-lg transition"
           >
-            <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
+            <div className="w-8 h-8 bg-emerald-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
               {user?.name?.charAt(0).toUpperCase()}
             </div>
             <span className="text-sm font-medium text-gray-700 hidden sm:inline">{user?.name}</span>

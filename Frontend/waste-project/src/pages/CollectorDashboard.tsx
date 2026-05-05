@@ -34,7 +34,7 @@ export function CollectorDashboard() {
 
   const handleStatusUpdate = async (reportId: string, newStatus: string) => {
     try {
-      await reportsAPI.updateReport(reportId, { status: newStatus })
+      await reportsAPI.updateStatus(reportId, newStatus)
       setReports(reports.map((r) => (r.id === reportId ? { ...r, status: newStatus } : r)))
     } catch (err) {
       console.error('Failed to update report:', err)
