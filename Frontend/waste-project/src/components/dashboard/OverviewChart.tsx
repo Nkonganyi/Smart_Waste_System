@@ -1,74 +1,113 @@
+import { useState, useEffect } from 'react'
+import { reportsAPI } from '@/lib/api'
+import type { Report } from '@/types'
 import { 
-  AreaChart, 
-  Area, 
+  BarChart, 
+  Bar, 
   XAxis, 
   YAxis, 
   CartesianGrid, 
   Tooltip, 
-  ResponsiveContainer 
+  ResponsiveContainer,
+  Legend
 } from 'recharts'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
-
-const data = [
-  { name: 'Mon', reports: 40, efficiency: 24 },
-  { name: 'Tue', reports: 30, efficiency: 13 },
-  { name: 'Wed', reports: 20, efficiency: 98 },
-  { name: 'Thu', reports: 27, efficiency: 39 },
-  { name: 'Fri', reports: 18, efficiency: 48 },
-  { name: 'Sat', reports: 23, efficiency: 38 },
-  { name: 'Sun', reports: 34, efficiency: 43 },
-]
+import { Skeleton } from '@/components/ui/skeleton'
+import { format, subDays, isSameDay, parseISO } from 'date-fns'
 
 export function OverviewChart() {
+  const [data, setData] = useState<{ name: string, reported: number, collected: number }[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await reportsAPI.getAllReports()
+        const reports: Report[] = Array.isArray(response.data) ? response.data : []
+        
+        // Last 7 days
+        const last7Days = Array.from({ length: 7 }, (_, i) => {
+          const date = subDays(new Date(), i)
+          return {
+            date,
+            name: format(date, 'EEE'),
+            reported: 0,
+            collected: 0
+          }
+        }).reverse()
+
+        reports.forEach(report => {
+          const reportDate = parseISO(report.created_at)
+          const dayData = last7Days.find(d => isSameDay(d.date, reportDate))
+          if (dayData) {
+            dayData.reported++
+            if (report.status === 'completed') {
+              dayData.collected++
+            }
+          }
+        })
+
+        setData(last7Days.map(({ name, reported, collected }) => ({ name, reported, collected })))
+      } catch (err) {
+        console.error('Failed to fetch overview data:', err)
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchData()
+  }, [])
+
   return (
-    <Card className="col-span-3 border-none shadow-soft">
-      <CardHeader className="flex flex-row items-center justify-between pb-8">
-        <div>
-          <CardTitle className="text-xl font-bold">System Performance</CardTitle>
-          <p className="text-sm text-muted-foreground">Report volume and collection efficiency</p>
-        </div>
+    <Card className="border-none shadow-soft">
+      <CardHeader>
+        <CardTitle className="text-lg font-bold">Collection Overview</CardTitle>
+        <p className="text-xs text-muted-foreground">Last 7 days activity</p>
       </CardHeader>
       <CardContent>
-        <div className="h-[350px] w-full">
-          <ResponsiveContainer width="100%" height="100%">
-            <AreaChart data={data}>
-              <defs>
-                <linearGradient id="colorReports" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.1}/>
-                  <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0}/>
-                </linearGradient>
-              </defs>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--muted))" />
-              <XAxis 
-                dataKey="name" 
-                axisLine={false} 
-                tickLine={false} 
-                tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }}
-                dy={10}
-              />
-              <YAxis 
-                axisLine={false} 
-                tickLine={false} 
-                tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }}
-              />
-              <Tooltip 
-                contentStyle={{ 
-                  backgroundColor: 'hsl(var(--card))', 
-                  borderColor: 'hsl(var(--border))',
-                  borderRadius: 'var(--radius)',
-                  boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
-                }}
-              />
-              <Area 
-                type="monotone" 
-                dataKey="reports" 
-                stroke="hsl(var(--primary))" 
-                fillOpacity={1} 
-                fill="url(#colorReports)" 
-                strokeWidth={3}
-              />
-            </AreaChart>
-          </ResponsiveContainer>
+        <div className="h-[300px] w-full min-h-[300px]">
+          {loading ? (
+            <Skeleton className="h-full w-full" />
+          ) : (
+            <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
+              <BarChart data={data}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--muted))" />
+                <XAxis 
+                  dataKey="name" 
+                  axisLine={false} 
+                  tickLine={false} 
+                  tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 10 }}
+                />
+                <YAxis 
+                  axisLine={false} 
+                  tickLine={false} 
+                  tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 10 }}
+                />
+                <Tooltip 
+                  contentStyle={{ 
+                    backgroundColor: 'hsl(var(--card))', 
+                    borderColor: 'hsl(var(--border))',
+                    borderRadius: 'var(--radius)',
+                    fontSize: '12px',
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+                  }}
+                />
+                <Legend verticalAlign="top" height={36} iconType="circle" />
+                <Bar 
+                  dataKey="reported" 
+                  fill="hsl(var(--primary))" 
+                  radius={[4, 4, 0, 0]} 
+                  animationDuration={1500}
+                />
+                <Bar 
+                  dataKey="collected" 
+                  fill="hsl(var(--info))" 
+                  radius={[4, 4, 0, 0]} 
+                  animationDuration={1500}
+                  animationBegin={300}
+                />
+              </BarChart>
+            </ResponsiveContainer>
+          )}
         </div>
       </CardContent>
     </Card>

@@ -32,6 +32,8 @@ export const reportsAPI = {
   // Uses snake_case keys expected by the backend assignCollector handler
   assignCollector: (reportId: string, collectorId: string) =>
     apiClient.post('/reports/assign', { report_id: reportId, collector_id: collectorId }),
+  getCollectors: () =>
+    apiClient.get('/reports/collectors'),
 }
 
 // Dashboard API
@@ -44,6 +46,18 @@ export const dashboardAPI = {
     apiClient.get('/dashboard/collectors'),
   getReportTrends: (days?: number) =>
     apiClient.get('/dashboard/trends', { params: { days } }),
+}
+
+// Notifications API
+export const notificationsAPI = {
+  getMyNotifications: () =>
+    apiClient.get('/notifications'),
+  getAllNotifications: () =>
+    apiClient.get('/notifications/all'),
+  markAsRead: (id: string) =>
+    apiClient.patch(`/notifications/${id}/read`),
+  markAllAsRead: () =>
+    apiClient.patch('/notifications/read-all'),
 }
 
 // Routes API

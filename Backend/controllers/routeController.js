@@ -1,5 +1,5 @@
 const supabase = require("../config/supabase");
-const { optimizeRoute } = require("../utils/routeService");
+const { optimizeRoute, getRouteGeometry } = require("../utils/routeService");
 
 /**
  * Get optimized route (admin)
@@ -44,14 +44,54 @@ exports.getOptimizedRoute = async (req, res) => {
         }));
 
         const { ordered, fallback } = await optimizeRoute(locations);
+        
+        // Fetch geometry for the optimized route
+        const { geometry, fallback: geometryFallback } = await getRouteGeometry(ordered);
 
         return res.status(200).json({
             route: ordered,
+            geometry,
             fallback,
+            geometry_fallback: geometryFallback,
             total: locations.length
         });
     } catch (error) {
         console.error("getOptimizedRoute exception:", error);
+        return res.status(500).json({
+            error: "Server error",
+            message: "An unexpected error occurred while optimizing route"
+        });
+    }
+};
+
+/**
+ * Optimize route between specific points (POST)
+ */
+exports.optimizeCustomRoute = async (req, res) => {
+    try {
+        const { locations } = req.body;
+
+        if (!locations || !Array.isArray(locations) || locations.length < 2) {
+            return res.status(400).json({
+                error: "Invalid input",
+                message: "Please provide at least two locations"
+            });
+        }
+
+        const { ordered, fallback } = await optimizeRoute(locations);
+        
+        // Fetch geometry for the optimized route
+        const { geometry, fallback: geometryFallback } = await getRouteGeometry(ordered);
+
+        return res.status(200).json({
+            route: ordered,
+            geometry,
+            fallback,
+            geometry_fallback: geometryFallback,
+            total: locations.length
+        });
+    } catch (error) {
+        console.error("optimizeCustomRoute exception:", error);
         return res.status(500).json({
             error: "Server error",
             message: "An unexpected error occurred while optimizing route"

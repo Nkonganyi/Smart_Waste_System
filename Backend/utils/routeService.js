@@ -40,7 +40,7 @@ exports.optimizeRoute = async (locations) => {
     try {
         const response = await axios.post(OPTIMIZATION_URL, payload, {
             headers: {
-                Authorization: apiKey,
+                "Authorization": apiKey,
                 "Content-Type": "application/json"
             }
         });

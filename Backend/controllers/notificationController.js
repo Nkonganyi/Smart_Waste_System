@@ -48,6 +48,26 @@ exports.markAsRead = async (req, res) => {
     }
 }
 
+// Get all notifications (admin only)
+exports.getAllNotifications = async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from("notifications")
+            .select("*, users!notifications_user_id_fkey(name, email)")
+            .order("created_at", { ascending: false })
+            .limit(20)
+
+        if (error) {
+            return res.status(400).json({ error: error.message })
+        }
+
+        res.json(data || [])
+    } catch (err) {
+        console.error("getAllNotifications exception:", err)
+        res.status(500).json({ error: "Server error" })
+    }
+}
+
 // Mark all notifications as read for the current user
 exports.markAllAsRead = async (req, res) => {
     try {
