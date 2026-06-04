@@ -10,7 +10,11 @@ function Table({ className, ...props }: React.ComponentProps<"table">) {
     >
       <table
         data-slot="table"
-        className={cn("w-full caption-bottom text-xs", className)}
+        className={cn(
+          "w-full caption-bottom text-sm border-separate border-spacing-0",
+          className
+        )}
+        style={{ borderCollapse: 'separate' }}
         {...props}
       />
     </div>
@@ -21,7 +25,10 @@ function TableHeader({ className, ...props }: React.ComponentProps<"thead">) {
   return (
     <thead
       data-slot="table-header"
-      className={cn("[&_tr]:border-b", className)}
+      className={cn(
+        "sticky top-0 z-10 bg-card/95 backdrop-blur border-b [&_th]:!bg-card/95 transition-colors",
+        className
+      )}
       {...props}
     />
   )
@@ -55,9 +62,14 @@ function TableRow({ className, ...props }: React.ComponentProps<"tr">) {
     <tr
       data-slot="table-row"
       className={cn(
-        "border-b transition-colors hover:bg-muted/50 has-aria-expanded:bg-muted/50 data-[state=selected]:bg-muted",
+        // Zebra striping: even rows get a subtle bg
+        "border-b transition-all duration-200 group focus-within:ring-2 focus-within:ring-primary/50",
+        "even:bg-muted/30 odd:bg-card",
+        "hover:bg-primary/5 hover:shadow-sm hover:scale-[1.01]",
+        "focus:bg-primary/10",
         className
       )}
+      tabIndex={0}
       {...props}
     />
   )
@@ -68,7 +80,7 @@ function TableHead({ className, ...props }: React.ComponentProps<"th">) {
     <th
       data-slot="table-head"
       className={cn(
-        "h-10 px-2 text-left align-middle font-medium whitespace-nowrap text-foreground [&:has([role=checkbox])]:pr-0",
+        "h-12 px-4 text-left align-middle font-semibold whitespace-nowrap text-foreground text-base border-b border-border sticky top-0 z-20 bg-inherit",
         className
       )}
       {...props}
@@ -81,7 +93,7 @@ function TableCell({ className, ...props }: React.ComponentProps<"td">) {
     <td
       data-slot="table-cell"
       className={cn(
-        "p-2 align-middle whitespace-nowrap [&:has([role=checkbox])]:pr-0",
+        "p-3 align-middle whitespace-nowrap text-sm transition-colors duration-200 [&:has([role=checkbox])]:pr-0",
         className
       )}
       {...props}

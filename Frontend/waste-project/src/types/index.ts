@@ -15,12 +15,14 @@ export interface Report {
   title: string
   description: string
   location: string
-  latitude: number
-  longitude: number
+  latitude?: number | null
+  longitude?: number | null
   status: 'pending' | 'in_progress' | 'completed' | 'cancelled'
-  priority: 'low' | 'medium' | 'high'
+  priority: 'low' | 'normal' | 'medium' | 'high'
   image_url?: string
+  image_urls?: string[]
   created_at: string
+  completed_at?: string
   user_id: string
   collector_id?: string
   parent_report_id?: string

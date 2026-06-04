@@ -51,17 +51,42 @@ exports.markAsRead = async (req, res) => {
 // Get all notifications (admin only)
 exports.getAllNotifications = async (req, res) => {
     try {
-        const { data, error } = await supabase
+        console.log("[DEBUG] Starting getAllNotifications...");
+        // 1. Fetch notifications
+        const { data: notifications, error } = await supabase
             .from("notifications")
-            .select("*, users!notifications_user_id_fkey(name, email)")
+            .select("*")
             .order("created_at", { ascending: false })
             .limit(20)
 
         if (error) {
+            console.error("[DEBUG] Supabase error in getAllNotifications:", error)
             return res.status(400).json({ error: error.message })
         }
 
-        res.json(data || [])
+        if (!notifications || notifications.length === 0) {
+            return res.json([]);
+        }
+
+        // 2. Fetch associated users manually to avoid foreign key schema issues
+        const userIds = [...new Set(notifications.map(n => n.user_id))].filter(Boolean);
+        const { data: users, error: userError } = await supabase
+            .from("users")
+            .select("id, name, email")
+            .in("id", userIds);
+
+        const usersMap = (users || []).reduce((acc, user) => {
+            acc[user.id] = user;
+            return acc;
+        }, {});
+
+        // 3. Combine data
+        const enrichedNotifications = notifications.map(n => ({
+            ...n,
+            users: usersMap[n.user_id] || { name: 'System', email: '' }
+        }));
+
+        res.json(enrichedNotifications)
     } catch (err) {
         console.error("getAllNotifications exception:", err)
         res.status(500).json({ error: "Server error" })

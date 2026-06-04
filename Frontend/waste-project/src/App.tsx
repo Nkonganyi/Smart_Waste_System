@@ -4,45 +4,18 @@ import { AdminRoute, CollectorRoute, CitizenRoute } from '@/components/Protected
 import { LoginPage } from '@/pages/LoginPage'
 import { RegisterPage } from '@/pages/RegisterPage'
 import { CitizenDashboard } from '@/pages/CitizenDashboard'
+import { CitizenReportForm } from '@/pages/CitizenReportForm'
+import { CitizenReportsPage } from '@/pages/CitizenReportsPage'
+import { CitizenProfile } from '@/pages/CitizenProfile'
 import { CollectorDashboard } from '@/pages/CollectorDashboard'
 import { AdminDashboard } from '@/pages/AdminDashboard'
 import { UsersPage } from '@/pages/admin/UsersPage'
 import { ReportsPage } from '@/pages/admin/ReportsPage'
+import { RoutesPage } from '@/pages/admin/RoutesPage'
 import { ToastContainer } from '@/components/ui/ToastContainer'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
 import './App.css'
-
-function HomePage() {
-  const { isAuthenticated, user } = useAuthStore()
-
-  if (!isAuthenticated) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-500 to-green-500">
-        <div className="text-center text-white">
-          <h1 className="text-5xl font-bold mb-4">Smart Waste System</h1>
-          <p className="text-xl mb-8">Efficient waste management and logistics optimization</p>
-          <div className="space-x-4">
-            <a href="/login" className="bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100">
-              Sign In
-            </a>
-            <a href="/register" className="bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-800">
-              Sign Up
-            </a>
-          </div>
-        </div>
-      </div>
-    )
-  }
-
-  // Redirect to appropriate dashboard based on role
-  if (user?.role === 'admin') {
-    return <Navigate to="/admin" replace />
-  }
-  if (user?.role === 'collector') {
-    return <Navigate to="/collector" replace />
-  }
-  return <Navigate to="/citizen" replace />
-}
+import HomePage from '@/pages/HomePage'
 
 export default function App() {
   return (
@@ -58,6 +31,33 @@ export default function App() {
             element={
               <CitizenRoute>
                 <CitizenDashboard />
+              </CitizenRoute>
+            }
+          />
+
+          <Route
+            path="/citizen/report"
+            element={
+              <CitizenRoute>
+                <CitizenReportForm />
+              </CitizenRoute>
+            }
+          />
+
+          <Route
+            path="/citizen/reports"
+            element={
+              <CitizenRoute>
+                <CitizenReportsPage />
+              </CitizenRoute>
+            }
+          />
+
+          <Route
+            path="/citizen/profile"
+            element={
+              <CitizenRoute>
+                <CitizenProfile />
               </CitizenRoute>
             }
           />
@@ -94,6 +94,15 @@ export default function App() {
             element={
               <AdminRoute>
                 <ReportsPage />
+              </AdminRoute>
+            }
+          />
+
+          <Route
+            path="/admin/routes"
+            element={
+              <AdminRoute>
+                <RoutesPage />
               </AdminRoute>
             }
           />

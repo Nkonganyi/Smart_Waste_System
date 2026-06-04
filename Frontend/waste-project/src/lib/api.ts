@@ -17,15 +17,31 @@ export const authAPI = {
 
 // Reports API
 export const reportsAPI = {
-  // Send as JSON — image is pre-uploaded via uploadAPI.uploadImage() and passed as image_url string
-  create: (data: { title: string; location: string; description: string; priority: string; image_url?: string }) =>
+  // Send as JSON — image is pre-uploaded via uploadAPI.uploadImages() and passed as image_url string
+  create: (data: { title: string; location: string; description: string; priority: string; image_url?: string; image_urls?: string[] }) =>
     apiClient.post('/reports', data),
   getMyReports: () =>
     apiClient.get('/reports/my'),
+  getLocationSuggestions: (query: string) =>
+    apiClient.get('/reports/location-suggestions', { params: { q: query } }),
+  getPublicHomepageSummary: () =>
+    apiClient.get('/reports/public-summary'),
   getAllReports: () =>
     apiClient.get('/reports'),
   getAssignedReports: () =>
     apiClient.get('/reports/assigned'),
+  getAssignedRoute: () =>
+    apiClient.get('/reports/assigned/route'),
+  geocodeLocation: (location: string) =>
+    apiClient.post('/reports/geocode', { location }),
+  startReport: (reportId: string) =>
+    apiClient.put('/reports/start', { report_id: reportId }),
+  completeReport: (reportId: string, completionImageUrl: string) =>
+    apiClient.put('/reports/complete', { report_id: reportId, completion_image_url: completionImageUrl }),
+  rejectAssignment: (reportId: string) =>
+    apiClient.put('/reports/reject-assignment', { report_id: reportId }),
+  updateReportCoords: (reportId: string, latitude: number, longitude: number) =>
+    apiClient.put('/reports/coords', { report_id: reportId, latitude, longitude }),
   // Calls the correct backend route PUT /api/reports/status
   updateStatus: (reportId: string, status: string) =>
     apiClient.put('/reports/status', { report_id: reportId, status }),
@@ -64,6 +80,8 @@ export const notificationsAPI = {
 export const routesAPI = {
   optimizeRoute: (locations: any[]) =>
     apiClient.post('/routes/optimize', { locations }),
+  getAllRoutes: () =>
+    apiClient.get('/routes/all'),
 }
 
 // Scheduling API
@@ -72,13 +90,32 @@ export const schedulingAPI = {
     apiClient.get('/schedule/prioritized'),
 }
 
-// Upload API
+const uploadImages = (files: File[], onUploadProgress?: (progress: number) => void) => {
+  const formData = new FormData()
+  files.forEach((file) => formData.append('files', file))
+
+  return apiClient.post('/upload', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+    onUploadProgress: (progressEvent) => {
+      if (onUploadProgress && progressEvent.total) {
+        onUploadProgress(Math.round((progressEvent.loaded / progressEvent.total) * 100))
+      }
+    },
+  })
+}
+
+export const userAPI = {
+  getProfile: () => apiClient.get('/users/profile'),
+  updateProfile: (data: { name?: string; phone?: string; address?: string }) => apiClient.put('/users/profile', data),
+}
+
 export const uploadAPI = {
-  uploadImage: (file: File) => {
-    const formData = new FormData()
-    formData.append('file', file)
-    return apiClient.post('/upload', formData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
-    })
-  },
+  uploadImages,
+  uploadImage: (file: File, onUploadProgress?: (progress: number) => void) =>
+    uploadImages([file], onUploadProgress).then((response) => {
+      if (Array.isArray(response.data?.urls)) {
+        return { data: { url: response.data.urls[0] } }
+      }
+      return { data: { url: response.data.url } }
+    }),
 }

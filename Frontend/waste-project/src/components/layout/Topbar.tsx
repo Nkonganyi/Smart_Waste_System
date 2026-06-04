@@ -1,9 +1,10 @@
-import { Bell, Search, User, Sun, Moon, LogOut, Settings, User as UserIcon } from 'lucide-react'
+import { Bell, Search, User, LogOut, Settings, User as UserIcon } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
+import { ThemeToggle } from '@/components/ThemeToggle'
 import { useAuthStore } from '@/stores/authStore'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,31 +17,7 @@ import {
 export function Topbar() {
   const user = useAuthStore(state => state.user)
   const logout = useAuthStore(state => state.logout)
-  const [isDarkMode, setIsDarkMode] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
-
-  // Initialize theme from localStorage or system preference
-  useEffect(() => {
-    const savedTheme = localStorage.getItem('theme')
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-    
-    if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
-      setIsDarkMode(true)
-      document.documentElement.classList.add('dark')
-    }
-  }, [])
-
-  const toggleTheme = () => {
-    const newMode = !isDarkMode
-    setIsDarkMode(newMode)
-    if (newMode) {
-      document.documentElement.classList.add('dark')
-      localStorage.setItem('theme', 'dark')
-    } else {
-      document.documentElement.classList.remove('dark')
-      localStorage.setItem('theme', 'light')
-    }
-  }
 
   return (
     <header className="flex h-16 items-center justify-between border-b bg-card px-8 z-30">
@@ -67,14 +44,7 @@ export function Topbar() {
       </div>
 
       <div className="flex items-center gap-3">
-        <Button 
-          variant="ghost" 
-          size="icon" 
-          className="text-muted-foreground hover:text-foreground"
-          onClick={toggleTheme}
-        >
-          {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
-        </Button>
+          <ThemeToggle />
 
         <Button variant="ghost" size="icon" className="relative text-muted-foreground hover:text-foreground">
           <Bell size={20} />

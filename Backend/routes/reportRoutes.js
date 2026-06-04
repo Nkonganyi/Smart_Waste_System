@@ -60,6 +60,13 @@ router.get(
     authenticate,
     reportController.getLocationSuggestions
 )
+
+// Geocode a free-text location (authenticated)
+router.post(
+    "/geocode",
+    authenticate,
+    reportController.geocodeLocation
+)
 // Get my reports (citizens and collectors)
 router.get(
     "/my",
@@ -108,6 +115,21 @@ router.put(
     authorize(["collector"]),
     reportController.rejectAssignment
 )
+
+// Update report coordinates (collector or admin)
+router.put(
+    "/coords",
+    authenticate,
+    authorize(["collector", "admin"]),
+    reportController.updateReportCoords
+)
+
+// Public homepage summary and recent report preview
+router.get(
+    "/public-summary",
+    reportController.getPublicHomepageSummary
+)
+
 // Get all reports (admin only)
 router.get(
     "/",

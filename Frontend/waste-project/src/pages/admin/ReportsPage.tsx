@@ -76,6 +76,8 @@ export function ReportsPage() {
   const [isDetailsOpen, setIsDetailsOpen] = useState(false)
   const [isAssignOpen, setIsAssignOpen] = useState(false)
   const [assigningCollector, setAssigningCollector] = useState<string>('')
+  const [assignLoading, setAssignLoading] = useState(false)
+  const [statusLoading, setStatusLoading] = useState<string | null>(null)
   
   const navigate = useNavigate()
   const { addToast } = useToastStore()
@@ -133,33 +135,39 @@ export function ReportsPage() {
   }, [reports])
 
   const handleStatusChange = async (reportId: string, newStatus: string) => {
+    setStatusLoading(reportId + newStatus)
     try {
-      // Logic for status update would go here
-      // For now we'll simulate success
+      await reportsAPI.updateStatus(reportId, newStatus)
       addToast(`Status updated to ${newStatus}`, 'success')
-      fetchData()
-    } catch (err) {
-      addToast('Failed to update status', 'error')
+      await fetchData()
+    } catch (err: any) {
+      addToast(err?.response?.data?.error || 'Failed to update status', 'error')
+    } finally {
+      setStatusLoading(null)
     }
   }
 
   const handleAssign = async () => {
     if (!selectedReport || !assigningCollector) return
+    setAssignLoading(true)
     try {
       await reportsAPI.assignCollector(selectedReport.id, assigningCollector)
       addToast('Collector assigned successfully', 'success')
       setIsAssignOpen(false)
       setSelectedReport(null)
       setAssigningCollector('')
-      fetchData()
-    } catch (err) {
-      addToast('Failed to assign collector', 'error')
+      await fetchData()
+    } catch (err: any) {
+      addToast(err?.response?.data?.error || 'Failed to assign collector', 'error')
+    } finally {
+      setAssignLoading(false)
     }
   }
 
+  // Standardized badge rendering for status/priority
   const getStatusBadge = (status: string) => {
     switch (status) {
-      case 'completed': return <Badge variant="success">Resolved</Badge>
+      case 'completed': return <Badge variant="success">Completed</Badge>
       case 'in_progress': return <Badge variant="info">In Progress</Badge>
       case 'pending': return <Badge variant="warning">Pending</Badge>
       case 'cancelled': return <Badge variant="destructive">Cancelled</Badge>
@@ -169,9 +177,9 @@ export function ReportsPage() {
 
   const getPriorityBadge = (priority: string) => {
     switch (priority) {
-      case 'high': return <Badge variant="destructive" className="bg-red-500">Critical</Badge>
+      case 'high': return <Badge variant="destructive">High</Badge>
       case 'medium': return <Badge variant="warning">Medium</Badge>
-      case 'low': return <Badge variant="success" className="bg-emerald-500">Low</Badge>
+      case 'low': return <Badge variant="success">Low</Badge>
       default: return <Badge variant="secondary">{priority}</Badge>
     }
   }
@@ -273,7 +281,8 @@ export function ReportsPage() {
                 setPriorityFilter('all')
                 setStartDate('')
                 setEndDate('')
-              }}>
+                setShowFilters(false)
+              }} aria-label="Reset filters">
                 <X size={18} />
               </Button>
             )}
@@ -433,11 +442,30 @@ export function ReportsPage() {
                           </DropdownMenuItem>
                           <DropdownMenuSeparator />
                           <DropdownMenuLabel>Update Status</DropdownMenuLabel>
-                          <DropdownMenuItem onClick={() => handleStatusChange(report.id, 'in_progress')}>
-                            <Clock className="mr-2 h-4 w-4" /> Set In Progress
+                          <DropdownMenuItem 
+                            onClick={() => handleStatusChange(report.id, 'in_progress')}
+                            disabled={statusLoading === report.id + 'in_progress' || report.status === 'completed'}
+                            aria-disabled={statusLoading === report.id + 'in_progress' || report.status === 'completed'}
+                          >
+                            {statusLoading === report.id + 'in_progress' ? (
+                              <span className="mr-2 h-4 w-4 animate-spin"><Clock className="h-4 w-4" /></span>
+                            ) : (
+                              <Clock className="mr-2 h-4 w-4" />
+                            )}
+                            Set In Progress
                           </DropdownMenuItem>
-                          <DropdownMenuItem className="text-emerald-600 focus:text-emerald-600" onClick={() => handleStatusChange(report.id, 'completed')}>
-                            <CheckCircle2 className="mr-2 h-4 w-4" /> Mark Resolved
+                          <DropdownMenuItem 
+                            className="text-emerald-600 focus:text-emerald-600" 
+                            onClick={() => handleStatusChange(report.id, 'completed')}
+                            disabled={statusLoading === report.id + 'completed' || report.status === 'completed'}
+                            aria-disabled={statusLoading === report.id + 'completed' || report.status === 'completed'}
+                          >
+                            {statusLoading === report.id + 'completed' ? (
+                              <span className="mr-2 h-4 w-4 animate-spin"><CheckCircle2 className="h-4 w-4" /></span>
+                            ) : (
+                              <CheckCircle2 className="mr-2 h-4 w-4" />
+                            )}
+                            Mark Completed
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
@@ -595,8 +623,10 @@ export function ReportsPage() {
 
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsAssignOpen(false)}>Cancel</Button>
-            <Button onClick={handleAssign} disabled={!assigningCollector}>
-              Confirm Assignment
+            <Button onClick={handleAssign} disabled={!assigningCollector || assignLoading} aria-busy={assignLoading}>
+              {assignLoading ? (
+                <span className="flex items-center gap-2"><span className="animate-spin h-4 w-4"><CheckCircle2 className="h-4 w-4" /></span>Assigning...</span>
+              ) : 'Confirm Assignment'}
             </Button>
           </DialogFooter>
         </DialogContent>

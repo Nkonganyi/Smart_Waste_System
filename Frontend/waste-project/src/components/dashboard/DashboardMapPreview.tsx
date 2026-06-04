@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from 'react-leaflet'
+import 'leaflet/dist/leaflet.css'
 import { reportsAPI, routesAPI } from '@/lib/api'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -42,22 +43,38 @@ function ChangeView({ bounds, markers }: { bounds: L.LatLngBoundsExpression | nu
     if (bounds) {
       map.fitBounds(bounds, { padding: [50, 50] })
     } else if (markers.length > 0) {
-      const markerBounds = L.latLngBounds(markers.map(m => [m.latitude, m.longitude]))
-      map.fitBounds(markerBounds, { padding: [50, 50] })
+      const valid = markers.filter(m => typeof m.latitude === 'number' && typeof m.longitude === 'number' && !isNaN(m.latitude) && !isNaN(m.longitude))
+      if (valid.length > 0) {
+        const markerBounds = L.latLngBounds(valid.map(m => [m.latitude, m.longitude]))
+        map.fitBounds(markerBounds, { padding: [50, 50] })
+      }
     }
   }, [bounds, markers, map])
   
   return null
 }
 
-export function DashboardMapPreview() {
-  const [reports, setReports] = useState<Report[]>([])
-  const [loading, setLoading] = useState(true)
+export function DashboardMapPreview({
+  reports: reportsProp,
+  routeData: routeDataProp,
+  fetchAll = true,
+}: {
+  reports?: Report[]
+  routeData?: any
+  fetchAll?: boolean
+}) {
+  const [reports, setReports] = useState<Report[]>(reportsProp || [])
+  const [loading, setLoading] = useState(!reportsProp)
   const [selectedPoints, setSelectedPoints] = useState<Report[]>([])
-  const [routeData, setRouteData] = useState<any>(null)
+  const [routeData, setRouteData] = useState<any>(routeDataProp || null)
   const [calculatingRoute, setCalculatingRoute] = useState(false)
 
   useEffect(() => {
+    if (!fetchAll || reportsProp) {
+      setLoading(false)
+      return
+    }
+
     const fetchReports = async () => {
       try {
         const response = await reportsAPI.getAllReports()
@@ -78,8 +95,20 @@ export function DashboardMapPreview() {
         setLoading(false)
       }
     }
+
     fetchReports()
-  }, [])
+  }, [fetchAll, reportsProp])
+
+  // If caller provided reportsProp, normalize and filter invalid coords
+  useEffect(() => {
+    if (!reportsProp) return
+    const valid = (reportsProp || []).filter((r: Report) =>
+      r && typeof r.latitude === 'number' && typeof r.longitude === 'number' &&
+      !isNaN(r.latitude) && !isNaN(r.longitude) && r.latitude !== 0 && r.longitude !== 0
+    )
+    setReports(valid)
+    setLoading(false)
+  }, [reportsProp])
 
   const handleMarkerClick = (report: Report) => {
     if (selectedPoints.find(p => p.id === report.id)) {
@@ -112,22 +141,31 @@ export function DashboardMapPreview() {
         } finally {
           setCalculatingRoute(false)
         }
+      } else if (routeDataProp) {
+        // use provided route data when available
+        setRouteData(routeDataProp)
       } else {
         setRouteData(null)
       }
     }
+
     getRoute()
-  }, [selectedPoints])
+  }, [selectedPoints, routeDataProp])
 
   const defaultCenter: [number, number] = [4.1537, 9.2685] // Buea
-  const center: [number, number] = reports.length > 0 
-    ? [reports[0].latitude, reports[0].longitude] 
-    : defaultCenter
+  const firstValid = reports.find(r => typeof r.latitude === 'number' && typeof r.longitude === 'number')
+  const center: [number, number] = firstValid ? [firstValid.latitude, firstValid.longitude] : defaultCenter
 
-  // Parse geometry into Leaflet positions
-  const routePositions: [number, number][] = routeData?.geometry?.features?.[0]?.geometry?.coordinates?.map(
-    (coord: number[]) => [coord[1], coord[0]] // ORS returns [lng, lat]
-  ) || []
+  // Parse geometry into Leaflet positions (ensure valid coords)
+  const routePositions: [number, number][] = (routeData?.geometry?.features?.[0]?.geometry?.coordinates || [])
+    .map((coord: any) => {
+      if (!coord || coord.length < 2) return null
+      const lng = Number(coord[0])
+      const lat = Number(coord[1])
+      if (!Number.isFinite(lng) || !Number.isFinite(lat)) return null
+      return [lat, lng]
+    })
+    .filter(Boolean) as [number, number][]
 
   const routeBounds = routePositions.length > 0 
     ? L.latLngBounds(routePositions) 
@@ -185,12 +223,15 @@ export function DashboardMapPreview() {
               <ChangeView bounds={routeBounds} markers={reports} />
 
               {reports.map((report, idx) => {
+                if (typeof report.latitude !== 'number' || typeof report.longitude !== 'number' || isNaN(report.latitude) || isNaN(report.longitude)) {
+                  return null
+                }
                 const isSelected = selectedPoints.some(p => p.id === report.id)
                 
                 // Check if this report has the same coordinates as any other report
                 const hasDuplicate = reports.some((r, i) => i !== idx && r.latitude === report.latitude && r.longitude === report.longitude)
-                const position: [number, number] = hasDuplicate 
-                  ? [jitter(report.latitude), jitter(report.longitude)] 
+                const position: [number, number] = hasDuplicate
+                  ? [jitter(report.latitude), jitter(report.longitude)]
                   : [report.latitude, report.longitude]
 
                 return (

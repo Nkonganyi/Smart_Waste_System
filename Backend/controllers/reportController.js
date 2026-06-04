@@ -310,6 +310,43 @@ exports.createReport = async (req, res) => {
     }
 }
 
+exports.getPublicHomepageSummary = async (req, res) => {
+    try {
+        const [
+            { count: totalReports },
+            { count: pendingReports },
+            { count: completedReports },
+            { count: collectorCount },
+            { data: recentReports, error: recentError }
+        ] = await Promise.all([
+            supabase.from("reports").select("*", { count: "exact", head: true }),
+            supabase.from("reports").select("*", { count: "exact", head: true }).in("status", ["pending", "in_progress"]),
+            supabase.from("reports").select("*", { count: "exact", head: true }).eq("status", "completed"),
+            supabase.from("users").select("*", { count: "exact", head: true }).eq("role", "collector"),
+            supabase.from("reports").select("id,title,description,location,priority,status,image_url,image_urls,created_at")
+                .order("created_at", { ascending: false })
+                .limit(6)
+        ])
+
+        if (recentError) {
+            console.error("getPublicHomepageSummary recent error:", recentError)
+        }
+
+        const reports = Array.isArray(recentReports) ? recentReports : []
+
+        res.json({
+            total_reports: totalReports || 0,
+            pending_reports: pendingReports || 0,
+            completed_reports: completedReports || 0,
+            collectors: collectorCount || 0,
+            recent_reports: reports
+        })
+    } catch (err) {
+        console.error("getPublicHomepageSummary error:", err)
+        res.status(500).json({ error: "Server error" })
+    }
+}
+
 // Get all reports (admin only)
 exports.getAllReports = async (req, res) => {
     try {
@@ -913,6 +950,44 @@ exports.rejectAssignment = async (req, res) => {
     }
 }
 
+// Update report coordinates (collector may update coordinates for assigned reports)
+exports.updateReportCoords = async (req, res) => {
+    try {
+        const { report_id, latitude, longitude } = req.body
+        if (!report_id || latitude === undefined || longitude === undefined) {
+            return res.status(400).json({ error: 'report_id, latitude and longitude are required' })
+        }
+
+        // If the requester is a collector, ensure they are assigned to the report
+        if (req.user.role === 'collector') {
+            const { data: assignment, error: assignError } = await supabase
+                .from('assignments')
+                .select('*')
+                .eq('report_id', report_id)
+                .eq('collector_id', req.user.id)
+                .single()
+
+            if (assignError || !assignment) {
+                return res.status(403).json({ error: 'You are not assigned to this report' })
+            }
+        }
+
+        const { error } = await supabase
+            .from('reports')
+            .update({ latitude, longitude })
+            .eq('id', report_id)
+
+        if (error) {
+            return res.status(400).json({ error: error.message })
+        }
+
+        res.json({ message: 'Coordinates updated' })
+    } catch (err) {
+        console.error('updateReportCoords exception:', err)
+        res.status(500).json({ error: 'Server error' })
+    }
+}
+
 // Delete report (admin only)
 exports.deleteReport = async (req, res) => {
     try {
@@ -947,6 +1022,26 @@ exports.getLocationSuggestions = async (req, res) => {
     } catch (err) {
         console.error("getLocationSuggestions exception:", err)
         res.status(500).json({ error: "Server error" })
+    }
+}
+
+// Geocode a location string and return coords (authenticated)
+exports.geocodeLocation = async (req, res) => {
+    try {
+        const { location } = req.body
+        if (!location || typeof location !== 'string' || location.trim().length < 2) {
+            return res.status(400).json({ error: 'location is required' })
+        }
+
+        const coords = await geocode(location)
+        if (!coords) {
+            return res.json({ latitude: null, longitude: null })
+        }
+
+        res.json(coords)
+    } catch (err) {
+        console.error('geocodeLocation exception:', err)
+        res.status(500).json({ error: 'Server error' })
     }
 }
 

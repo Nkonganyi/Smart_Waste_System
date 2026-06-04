@@ -35,7 +35,7 @@ interface NavSection {
   items: NavItem[]
 }
 
-const navSections: NavSection[] = [
+const adminSections: NavSection[] = [
   {
     title: 'MAIN',
     items: [
@@ -68,11 +68,41 @@ const navSections: NavSection[] = [
   }
 ]
 
+const collectorSections: NavSection[] = [
+  {
+    title: 'MAIN',
+    items: [
+      { label: 'Dashboard', icon: LayoutDashboard, href: '/collector' },
+    ]
+  },
+  {
+    title: 'OPERATIONS',
+    items: [
+      { label: 'My Routes', icon: Map, href: '/collector/routes' },
+      { label: 'History', icon: History, href: '/collector/history' },
+    ]
+  },
+  {
+    title: 'COMMUNICATION',
+    items: [
+      { label: 'Notifications', icon: Bell, href: '/collector/notifications' },
+    ]
+  },
+  {
+    title: 'ACCOUNT',
+    items: [
+      { label: 'Settings', icon: Settings, href: '/collector/settings' },
+    ]
+  }
+]
+
 export function Sidebar({ className }: SidebarProps) {
   const location = useLocation()
   const logout = useAuthStore(state => state.logout)
   const user = useAuthStore(state => state.user)
   const [isCollapsed, setIsCollapsed] = useState(false)
+
+  const sections = user?.role === 'admin' ? adminSections : collectorSections
 
   return (
     <aside 
@@ -96,7 +126,7 @@ export function Sidebar({ className }: SidebarProps) {
       </div>
 
       <nav className="flex-1 overflow-y-auto space-y-6 px-3 py-4 custom-scrollbar">
-        {navSections.map((section) => (
+        {sections.map((section) => (
           <div key={section.title} className="space-y-1">
             {!isCollapsed && (
               <h3 className="px-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground/70">

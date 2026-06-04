@@ -41,8 +41,8 @@ app.use("/api/auth", authRoutes)
 app.use("/api/reports", reportRoutes)
 app.use("/api/notifications", notificationRoutes)
 app.use("/api/dashboard", dashboardRoutes)
-app.use("/api/admin", adminRoutes)
 app.use("/api/routes", routeRoutes)
+app.use("/api/admin", adminRoutes)
 app.use("/api/schedule", schedulingRoutes)
 
 // Test endpoints
@@ -54,38 +54,63 @@ app.post(
     "/api/upload",
     authenticate,
     (req, res, next) => {
-        upload.single("file")(req, res, (err) => {
+        upload.array("files", 3)(req, res, (err) => {
             if (err instanceof multer.MulterError) {
                 if (err.code === "LIMIT_FILE_SIZE") {
-                    return res.status(400).json({ error: "File too large (max 5MB)" })
+                    return res.status(400).json({ error: "File too large (max 10MB per file)" })
                 }
                 return res.status(400).json({ error: err.message })
             } else if (err) {
                 return res.status(400).json({ error: err.message })
             }
+
+            if (!req.files || req.files.length === 0) {
+                upload.single("file")(req, res, (errSingle) => {
+                    if (errSingle instanceof multer.MulterError) {
+                        if (errSingle.code === "LIMIT_FILE_SIZE") {
+                            return res.status(400).json({ error: "File too large (max 10MB)" })
+                        }
+                        return res.status(400).json({ error: errSingle.message })
+                    } else if (errSingle) {
+                        return res.status(400).json({ error: errSingle.message })
+                    }
+                    next()
+                })
+                return
+            }
+
             next()
         })
     },
     async (req, res) => {
-        if (!req.file) {
+        const files = req.files && req.files.length ? req.files : req.file ? [req.file] : []
+
+        if (files.length === 0) {
             return res.status(400).json({ error: "No file provided" })
         }
+
         try {
-            const fileName = `${Date.now()}-${req.file.originalname}`
-            const { error: uploadError } = await supabase.storage
-                .from("waste-images")
-                .upload(fileName, req.file.buffer, {
-                    contentType: req.file.mimetype,
-                    upsert: false
-                })
-            
-            if (uploadError) {
-                console.error("Supabase storage error:", uploadError)
-                return res.status(400).json({ error: uploadError.message })
+            const urls = []
+
+            for (const file of files) {
+                const fileName = `${Date.now()}-${file.originalname}`
+                const { error: uploadError } = await supabase.storage
+                    .from("waste-images")
+                    .upload(fileName, file.buffer, {
+                        contentType: file.mimetype,
+                        upsert: false,
+                    })
+
+                if (uploadError) {
+                    console.error("Supabase storage error:", uploadError)
+                    return res.status(400).json({ error: uploadError.message })
+                }
+
+                const { data: publicUrl } = supabase.storage.from("waste-images").getPublicUrl(fileName)
+                urls.push(publicUrl.publicUrl)
             }
 
-            const { data: publicUrl } = supabase.storage.from("waste-images").getPublicUrl(fileName)
-            return res.json({ url: publicUrl.publicUrl })
+            return res.json({ urls, url: urls[0] })
         } catch (err) {
             console.error("Upload exception:", err)
             return res.status(500).json({ error: "Upload failed" })
@@ -102,10 +127,7 @@ const clientDistPath = path.join(__dirname, '..', 'Frontend', 'waste-project', '
 app.use(express.static(clientDistPath))
 
 // SPA fallback — all non-API GET requests return index.html so React Router handles routing
-app.get('/{*path}', (req, res, next) => {
-    // Let API 404 handler deal with unknown /api/* paths
-    if (req.url.startsWith('/api')) return next()
-
+app.get(/^(?!\/api).+/, (req, res) => {
     const indexFile = path.join(clientDistPath, 'index.html')
     res.sendFile(indexFile, (err) => {
         if (err) {
@@ -129,14 +151,16 @@ app.get('/{*path}', (req, res, next) => {
 
 // Catch-all for undefined routes
 app.use((req, res) => {
-    console.warn(`[SERVER 404] No route matched: ${req.method} ${req.url}`);
+    console.warn(`[SERVER 404] No route matched: ${req.method} ${req.originalUrl}`);
     res.status(404).json({
         error: "Not Found",
-        message: `The path ${req.url} does not exist on this server.`,
+        message: `The path ${req.originalUrl} does not exist on this server.`,
         availableEndpoints: [
             "/api/users/profile",
             "/api/auth",
             "/api/reports",
+            "/api/routes/all",
+            "/api/notifications/all",
             "/api/test"
         ]
     });
