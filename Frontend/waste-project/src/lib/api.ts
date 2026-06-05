@@ -48,6 +48,10 @@ export const reportsAPI = {
   // Uses snake_case keys expected by the backend assignCollector handler
   assignCollector: (reportId: string, collectorId: string) =>
     apiClient.post('/reports/assign', { report_id: reportId, collector_id: collectorId }),
+  approveReport: (reportId: string) =>
+    apiClient.put('/reports/approve', { report_id: reportId }),
+  rejectReport: (reportId: string, reason?: string) =>
+    apiClient.put('/reports/reject', { report_id: reportId, reason }),
   getCollectors: () =>
     apiClient.get('/reports/collectors'),
 }

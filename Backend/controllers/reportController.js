@@ -780,7 +780,7 @@ exports.getCollectorOptimizedRoute = async (req, res) => {
                 const normalizedStatus = report.status === "approved" ? "pending" : report.status
                 return { ...report, status: normalizedStatus }
             })
-            .filter(report => report && report.status !== "completed" && report.latitude && report.longitude)
+            .filter(report => report && report.latitude && report.longitude)
 
         const locations = reports.map(report => ({
             id: report.id,

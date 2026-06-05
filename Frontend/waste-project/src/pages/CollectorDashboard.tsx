@@ -356,7 +356,11 @@ export function CollectorDashboard() {
               </CardHeader>
               <CardContent className="p-0">
                 <div className="h-[500px] w-full relative">
-                  <DashboardMapPreview reports={reports} routeData={routeData} fetchAll={false} />
+                  <DashboardMapPreview 
+                    reports={reports} 
+                    routeData={routeData} 
+                    fetchAll={false} 
+                  />
                 </div>
               </CardContent>
             </Card>

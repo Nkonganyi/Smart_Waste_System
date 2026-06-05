@@ -145,6 +145,7 @@ export function DashboardMapPreview({
         // use provided route data when available
         setRouteData(routeDataProp)
       } else {
+        // Only clear if no prop was provided either
         setRouteData(null)
       }
     }
@@ -184,7 +185,9 @@ export function DashboardMapPreview({
       <CardHeader className="flex flex-row items-center justify-between">
         <div>
           <CardTitle className="text-xl font-bold">Waste Location Map</CardTitle>
-          <p className="text-sm text-muted-foreground">Select two points to visualize the optimal route</p>
+          <p className="text-sm text-muted-foreground">
+            {routeData ? 'Optimized route for active missions' : 'Select points to visualize the optimal route'}
+          </p>
         </div>
         <div className="flex items-center gap-2">
           {selectedPoints.length > 0 && (

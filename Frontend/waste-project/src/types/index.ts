@@ -17,7 +17,7 @@ export interface Report {
   location: string
   latitude?: number | null
   longitude?: number | null
-  status: 'pending' | 'in_progress' | 'completed' | 'cancelled'
+  status: 'pending' | 'approved' | 'rejected' | 'in_progress' | 'completed' | 'cancelled'
   priority: 'low' | 'normal' | 'medium' | 'high'
   image_url?: string
   image_urls?: string[]

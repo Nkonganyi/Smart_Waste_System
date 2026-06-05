@@ -134,6 +134,32 @@ export function ReportsPage() {
     }
   }, [reports])
 
+  const handleApprove = async (reportId: string) => {
+    setStatusLoading(reportId + 'approving')
+    try {
+      await reportsAPI.approveReport(reportId)
+      addToast('Report approved', 'success')
+      await fetchData()
+    } catch (err: any) {
+      addToast(err?.response?.data?.error || 'Failed to approve report', 'error')
+    } finally {
+      setStatusLoading(null)
+    }
+  }
+
+  const handleReject = async (reportId: string) => {
+    setStatusLoading(reportId + 'rejecting')
+    try {
+      await reportsAPI.rejectReport(reportId)
+      addToast('Report rejected', 'success')
+      await fetchData()
+    } catch (err: any) {
+      addToast(err?.response?.data?.error || 'Failed to reject report', 'error')
+    } finally {
+      setStatusLoading(null)
+    }
+  }
+
   const handleStatusChange = async (reportId: string, newStatus: string) => {
     setStatusLoading(reportId + newStatus)
     try {
@@ -169,7 +195,9 @@ export function ReportsPage() {
     switch (status) {
       case 'completed': return <Badge variant="success">Completed</Badge>
       case 'in_progress': return <Badge variant="info">In Progress</Badge>
-      case 'pending': return <Badge variant="warning">Pending</Badge>
+      case 'approved': return <Badge variant="default" className="bg-emerald-500 text-white">Approved</Badge>
+      case 'pending': return <Badge variant="warning">Pending Review</Badge>
+      case 'rejected': return <Badge variant="destructive">Rejected</Badge>
       case 'cancelled': return <Badge variant="destructive">Cancelled</Badge>
       default: return <Badge variant="secondary">{status}</Badge>
     }
@@ -298,7 +326,9 @@ export function ReportsPage() {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All Statuses</SelectItem>
-                    <SelectItem value="pending">Pending</SelectItem>
+                    <SelectItem value="pending">Pending Review</SelectItem>
+                    <SelectItem value="approved">Approved</SelectItem>
+                    <SelectItem value="rejected">Rejected</SelectItem>
                     <SelectItem value="in_progress">In Progress</SelectItem>
                     <SelectItem value="completed">Resolved</SelectItem>
                     <SelectItem value="cancelled">Cancelled</SelectItem>
@@ -437,15 +467,35 @@ export function ReportsPage() {
                           <DropdownMenuItem onClick={() => {
                             setSelectedReport(report)
                             setIsAssignOpen(true)
-                          }}>
+                          }} disabled={report.status !== 'approved'}>
                             <UserPlus className="mr-2 h-4 w-4" /> Assign Collector
                           </DropdownMenuItem>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuLabel>Moderation</DropdownMenuLabel>
+                          {report.status === 'pending' && (
+                            <>
+                              <DropdownMenuItem 
+                                className="text-emerald-600 focus:text-emerald-600 focus:bg-emerald-50"
+                                onClick={() => handleApprove(report.id)}
+                                disabled={statusLoading === report.id + 'approving'}
+                              >
+                                <CheckCircle2 className="mr-2 h-4 w-4" /> Approve Report
+                              </DropdownMenuItem>
+                              <DropdownMenuItem 
+                                className="text-rose-600 focus:text-rose-600 focus:bg-rose-50"
+                                onClick={() => handleReject(report.id)}
+                                disabled={statusLoading === report.id + 'rejecting'}
+                              >
+                                <X className="mr-2 h-4 w-4" /> Reject Report
+                              </DropdownMenuItem>
+                            </>
+                          )}
                           <DropdownMenuSeparator />
                           <DropdownMenuLabel>Update Status</DropdownMenuLabel>
                           <DropdownMenuItem 
                             onClick={() => handleStatusChange(report.id, 'in_progress')}
-                            disabled={statusLoading === report.id + 'in_progress' || report.status === 'completed'}
-                            aria-disabled={statusLoading === report.id + 'in_progress' || report.status === 'completed'}
+                            disabled={statusLoading === report.id + 'in_progress' || report.status === 'completed' || report.status === 'pending' || report.status === 'rejected'}
+                            aria-disabled={statusLoading === report.id + 'in_progress' || report.status === 'completed' || report.status === 'pending' || report.status === 'rejected'}
                           >
                             {statusLoading === report.id + 'in_progress' ? (
                               <span className="mr-2 h-4 w-4 animate-spin"><Clock className="h-4 w-4" /></span>
@@ -573,11 +623,40 @@ export function ReportsPage() {
 
           <DialogFooter className="gap-2 sm:gap-0">
             <Button variant="outline" onClick={() => setIsDetailsOpen(false)}>Close</Button>
-            <Button onClick={() => {
-              setIsDetailsOpen(false)
-              setIsAssignOpen(true)
-            }}>Assign Collector</Button>
-            {selectedReport?.status !== 'completed' && (
+            
+            {selectedReport?.status === 'pending' && (
+              <>
+                <Button 
+                  className="bg-emerald-600 hover:bg-emerald-700" 
+                  onClick={() => {
+                    handleApprove(selectedReport.id)
+                    setIsDetailsOpen(false)
+                  }}
+                  disabled={statusLoading === selectedReport.id + 'approving'}
+                >
+                  Approve Report
+                </Button>
+                <Button 
+                  variant="destructive"
+                  onClick={() => {
+                    handleReject(selectedReport.id)
+                    setIsDetailsOpen(false)
+                  }}
+                  disabled={statusLoading === selectedReport.id + 'rejecting'}
+                >
+                  Reject Report
+                </Button>
+              </>
+            )}
+
+            {selectedReport?.status === 'approved' && (
+              <Button onClick={() => {
+                setIsDetailsOpen(false)
+                setIsAssignOpen(true)
+              }}>Assign Collector</Button>
+            )}
+
+            {selectedReport && ['approved', 'in_progress'].includes(selectedReport.status) && (
               <Button className="bg-emerald-600 hover:bg-emerald-700" onClick={() => handleStatusChange(selectedReport!.id, 'completed')}>
                 Mark as Resolved
               </Button>
