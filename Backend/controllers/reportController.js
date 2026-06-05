@@ -766,10 +766,11 @@ exports.getCollectorOptimizedRoute = async (req, res) => {
 
         const { data, error } = await supabase
             .from("assignments")
-            .select("report_id, reports(id, title, latitude, longitude, status)")
+            .select(`report_id, reports(*)`)
             .eq("collector_id", collectorId)
 
         if (error) {
+            console.error("getCollectorOptimizedRoute query error:", error)
             return res.status(400).json({ error: error.message })
         }
 

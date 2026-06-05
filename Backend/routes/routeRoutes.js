@@ -13,6 +13,6 @@ router.get("/", authenticate, authorize(["admin"]), routeController.getOptimized
 // Get all routes (admin)
 router.get("/all", authenticate, authorize(["admin"]), routeController.getAllRoutes)
 
-// Optimize route between specific points (POST)
-router.post("/optimize", authenticate, authorize(["admin"]), routeController.optimizeCustomRoute)
+// Optimize route between specific points (POST) - Accessible to Admin and Collector
+router.post("/optimize", authenticate, authorize(["admin", "collector"]), routeController.optimizeCustomRoute)
 module.exports = router

@@ -8,6 +8,7 @@ import { CitizenReportForm } from '@/pages/CitizenReportForm'
 import { CitizenReportsPage } from '@/pages/CitizenReportsPage'
 import { CitizenProfile } from '@/pages/CitizenProfile'
 import { CollectorDashboard } from '@/pages/CollectorDashboard'
+import { CollectorRoutesPage } from '@/pages/CollectorRoutesPage'
 import { AdminDashboard } from '@/pages/AdminDashboard'
 import { UsersPage } from '@/pages/admin/UsersPage'
 import { ReportsPage } from '@/pages/admin/ReportsPage'
@@ -67,6 +68,15 @@ export default function App() {
             element={
               <CollectorRoute>
                 <CollectorDashboard />
+              </CollectorRoute>
+            }
+          />
+
+          <Route
+            path="/collector/routes"
+            element={
+              <CollectorRoute>
+                <CollectorRoutesPage />
               </CollectorRoute>
             }
           />

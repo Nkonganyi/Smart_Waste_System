@@ -13,7 +13,8 @@ import {
   Truck,
   BarChart3,
   History,
-  User as UserIcon
+  User as UserIcon,
+  Package
 } from 'lucide-react'
 import { cn } from '@/utils'
 import { Button } from '@/components/ui/button'
@@ -48,7 +49,7 @@ const adminSections: NavSection[] = [
       { label: 'Reports', icon: FileText, href: '/admin/reports' },
       { label: 'Routes', icon: Map, href: '/admin/routes' },
       { label: 'Priority Queue', icon: ListOrdered, href: '/admin/priority' },
-      { label: 'Collections', icon: Truck, href: '/admin/collections' },
+      { label: 'Collections', icon: Package, href: '/admin/collections' },
     ]
   },
   {
@@ -80,6 +81,7 @@ const collectorSections: NavSection[] = [
     items: [
       { label: 'My Routes', icon: Map, href: '/collector/routes' },
       { label: 'History', icon: History, href: '/collector/history' },
+      { label: 'Collections', icon: Package, href: '/collector/collections' },
     ]
   },
   {
