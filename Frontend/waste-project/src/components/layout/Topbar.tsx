@@ -1,4 +1,4 @@
-import { Bell, Search, User, LogOut, Settings, User as UserIcon } from 'lucide-react'
+import { Bell, Search, User, LogOut, Settings, User as UserIcon, Globe } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -23,12 +23,15 @@ export function Topbar() {
     <header className="flex h-16 items-center justify-between border-b bg-card px-8 z-30">
       <div className="flex items-center gap-8">
         <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-            <span className="font-bold">SW</span>
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-600 text-white shadow-lg shadow-emerald-200 dark:shadow-none">
+            <Globe size={18} />
           </div>
-          <span className="text-lg font-bold tracking-tight text-foreground hidden md:block">
-            SmartWaste
-          </span>
+          <div className="flex flex-col leading-none hidden md:flex">
+            <span className="text-lg font-black tracking-tighter text-slate-900 dark:text-white">
+              Eco<span className="text-emerald-600">Sync</span>
+            </span>
+            <span className="text-[7px] font-black uppercase tracking-[0.2em] text-emerald-600/60 mt-0.5">Smart City Hub</span>
+          </div>
         </Link>
 
         <div className="relative w-64 lg:w-96 hidden sm:block">

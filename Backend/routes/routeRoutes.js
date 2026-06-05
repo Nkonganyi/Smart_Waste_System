@@ -7,8 +7,8 @@ const { authenticate, authorize } = require("../middleware/authMiddleware")
  * Admin-only route optimization routes
  */
 
-// Get optimized route (admin)
-router.get("/", authenticate, authorize(["admin"]), routeController.getOptimizedRoute)
+// Get optimized route (admin and collector)
+router.get("/", authenticate, authorize(["admin", "collector"]), routeController.getOptimizedRoute)
 
 // Get all routes (admin)
 router.get("/all", authenticate, authorize(["admin"]), routeController.getAllRoutes)

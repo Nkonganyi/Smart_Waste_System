@@ -7,7 +7,7 @@ import {
   LogOut, 
   Map, 
   Bell,
-  Trash2,
+  Globe,
   ChevronLeft,
   ListOrdered,
   Truck,
@@ -116,13 +116,16 @@ export function Sidebar({ className }: SidebarProps) {
     >
       <div className="flex h-16 items-center px-6">
         <div className="flex items-center gap-3">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-            <Trash2 size={18} />
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-600 text-white shadow-lg shadow-emerald-200 dark:shadow-none">
+            <Globe size={18} />
           </div>
           {!isCollapsed && (
-            <span className="text-lg font-bold tracking-tight text-foreground">
-              SmartWaste
-            </span>
+            <div className="flex flex-col leading-none">
+              <span className="text-lg font-black tracking-tighter text-slate-900 dark:text-white">
+                Eco<span className="text-emerald-600">Sync</span>
+              </span>
+              <span className="text-[7px] font-black uppercase tracking-[0.2em] text-emerald-600/60 mt-0.5">Smart City Hub</span>
+            </div>
           )}
         </div>
       </div>

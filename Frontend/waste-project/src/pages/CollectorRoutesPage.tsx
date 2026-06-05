@@ -141,19 +141,29 @@ export function CollectorRoutesPage() {
     setOptimizedRoute(null)
   }
 
-  const routePositions: [number, number][] = useMemo(() => {
-    if (!optimizedRoute?.geometry?.features?.[0]?.geometry?.coordinates) return []
-    return optimizedRoute.geometry.features[0].geometry.coordinates.map((coord: any) => [coord[1], coord[0]])
+  const distance = useMemo(() => {
+    const summary = optimizedRoute?.geometry?.features?.[0]?.properties?.summary
+    if (!summary) return '---'
+    return (summary.distance / 1000).toFixed(2) + ' km'
+  }, [optimizedRoute])
+
+  const duration = useMemo(() => {
+    const summary = optimizedRoute?.geometry?.features?.[0]?.properties?.summary
+    if (!summary) return '---'
+    return Math.round(summary.duration / 60) + ' min'
+  }, [optimizedRoute])
+
+  const routePositions = useMemo(() => {
+    const coords = optimizedRoute?.geometry?.features?.[0]?.geometry?.coordinates
+    if (!coords || !Array.isArray(coords)) return []
+    // OpenRouteService returns [lng, lat], Leaflet needs [lat, lng]
+    return coords.map((coord: any) => [coord[1], coord[0]] as [number, number])
   }, [optimizedRoute])
 
   const routeBounds = useMemo(() => {
     if (routePositions.length === 0) return null
     return L.latLngBounds(routePositions)
   }, [routePositions])
-
-  const summary = optimizedRoute?.geometry?.features?.[0]?.properties?.summary
-  const distance = summary ? (summary.distance / 1000).toFixed(2) + ' km' : null
-  const duration = summary ? Math.round(summary.duration / 60) + ' min' : null
 
   if (loading && reports.length === 0) {
     return (
@@ -361,18 +371,32 @@ export function CollectorRoutesPage() {
                   )
                 })}
 
+                {/* Optimized Path Line */}
                 {routePositions.length > 0 && (
-                  <Polyline 
-                    positions={routePositions}
-                    pathOptions={{ 
-                      color: '#2563eb', 
-                      weight: 5, 
-                      opacity: 0.7,
-                      lineCap: 'round',
-                      lineJoin: 'round',
-                      dashArray: '1, 10'
-                    }}
-                  />
+                  <>
+                    {/* Outer Glow */}
+                    <Polyline 
+                      positions={routePositions}
+                      pathOptions={{ 
+                        color: '#10b981', 
+                        weight: 8, 
+                        opacity: 0.2,
+                        lineCap: 'round',
+                        lineJoin: 'round'
+                      }}
+                    />
+                    {/* Main Line */}
+                    <Polyline 
+                      positions={routePositions}
+                      pathOptions={{ 
+                        color: '#10b981', 
+                        weight: 4, 
+                        opacity: 0.8,
+                        lineCap: 'round',
+                        lineJoin: 'round'
+                      }}
+                    />
+                  </>
                 )}
               </MapContainer>
             </div>
