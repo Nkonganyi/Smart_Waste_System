@@ -7,6 +7,8 @@ export interface User {
   email: string
   role: 'citizen' | 'collector' | 'admin'
   created_at: string
+  phone?: string
+  address?: string
 }
 
 interface AuthStore {

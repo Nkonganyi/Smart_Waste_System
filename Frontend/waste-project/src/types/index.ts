@@ -8,6 +8,8 @@ export interface User {
   created_at: string
   is_verified?: boolean
   is_suspended?: boolean
+  phone?: string
+  address?: string
 }
 
 export interface Report {

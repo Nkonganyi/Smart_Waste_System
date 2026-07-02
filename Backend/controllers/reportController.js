@@ -1,5 +1,6 @@
 const supabase = require("../config/supabase")
 const { geocode, getLocationSuggestions } = require("../utils/geocodingService")
+const { validateCoordinates, validateAndGeocodeLocation } = require("../utils/locationValidation")
 const { optimizeRoute, getRouteGeometry } = require("../utils/routeService")
 
 // Helper: Calculate distance between two points in meters (Haversine formula)
@@ -250,6 +251,7 @@ exports.createReport = async (req, res) => {
 
         // 2. Text Search Fallback (if no proximity match found)
         if (!parentReportId) {
+            // Use maybeSingle() so "no rows" returns null instead of throwing
             const { data: textMatch } = await supabase
                 .from("reports")
                 .select("id")
@@ -257,7 +259,7 @@ exports.createReport = async (req, res) => {
                 .ilike("location", location) // Case-insensitive exact match
                 .is("parent_report_id", null) // Link to the "main" report
                 .limit(1)
-                .single()
+                .maybeSingle()
 
             if (textMatch) {
                 parentReportId = textMatch.id
@@ -303,7 +305,19 @@ exports.createReport = async (req, res) => {
             await supabase.from("notifications").insert(notifications)
         }
 
-        res.status(201).json({ message: "Report submitted successfully" })
+        res.status(201).json({
+            message: "Report submitted successfully",
+            report: {
+                id: report.id,
+                title: report.title,
+                location: report.location,
+                status: report.status,
+                priority: report.priority,
+                created_at: report.created_at,
+                is_duplicate: !!parentReportId,
+                parent_report_id: report.parent_report_id || null
+            }
+        })
     } catch (err) {
         console.error("createReport exception:", err)
         res.status(500).json({ error: "Server error" })
@@ -618,22 +632,35 @@ exports.assignCollector = async (req, res) => {
     }
 }
 
-// Update report status (collector only)
+// Update report status (collector who is assigned, or admin)
 exports.updateReportStatus = async (req, res) => {
     try {
         const { report_id, status } = req.body
-        const collector_id = req.user.id
+        const ALLOWED_STATUSES = ["pending", "approved", "in_progress", "completed", "rejected", "cancelled"]
 
-        // Check if collector is assigned to this report
-        const { data: assignment } = await supabase
-            .from("assignments")
-            .select("*")
-            .eq("report_id", report_id)
-            .eq("collector_id", collector_id)
-            .single()
+        if (!report_id || !status) {
+            return res.status(400).json({ error: "report_id and status are required" })
+        }
 
-        if (!assignment) {
-            return res.status(403).json({ error: "You are not assigned to this report" })
+        if (!ALLOWED_STATUSES.includes(status)) {
+            return res.status(400).json({
+                error: `Invalid status. Allowed values: ${ALLOWED_STATUSES.join(", ")}`
+            })
+        }
+
+        // Collectors can only update their own assigned reports
+        if (req.user.role === "collector") {
+            const collector_id = req.user.id
+            const { data: assignment } = await supabase
+                .from("assignments")
+                .select("*")
+                .eq("report_id", report_id)
+                .eq("collector_id", collector_id)
+                .single()
+
+            if (!assignment) {
+                return res.status(403).json({ error: "You are not assigned to this report" })
+            }
         }
 
         const { error } = await cascadeReportStatus(report_id, { status })
@@ -702,7 +729,15 @@ exports.getMyReports = async (req, res) => {
             return res.status(400).json({ error: error.message })
         }
 
-        res.json(data)
+        // Citizens don't need to see the internal "approved" state —
+        // it means "approved by admin, awaiting collector" which from
+        // the citizen's perspective is still "pending action".
+        const normalized = data.map(r => ({
+            ...r,
+            status: r.status === "approved" ? "pending" : r.status
+        }))
+
+        res.json(normalized)
     } catch (err) {
         console.error("getMyReports exception:", err)
         res.status(500).json({ error: "Server error" })
@@ -873,8 +908,8 @@ exports.completeReport = async (req, res) => {
         const { report_id, completion_image_url } = req.body
         const collectorId = req.user.id
 
-        if (!completion_image_url) {
-            return res.status(400).json({ error: "Completion image is required." })
+        if (!report_id) {
+            return res.status(400).json({ error: "report_id is required." })
         }
 
         const { data: assignment, error: assignError } = await supabase
@@ -888,11 +923,16 @@ exports.completeReport = async (req, res) => {
             return res.status(403).json({ error: "You are not assigned to this report" })
         }
 
-        const { error } = await cascadeReportStatus(report_id, {
+        const updateFields = {
             status: "completed",
-            completed_at: new Date(),
-            completion_image_url
-        })
+            completed_at: new Date()
+        }
+        // completion image is optional — include it only when provided
+        if (completion_image_url && typeof completion_image_url === "string" && completion_image_url.trim()) {
+            updateFields.completion_image_url = completion_image_url.trim()
+        }
+
+        const { error } = await cascadeReportStatus(report_id, updateFields)
 
         if (error) {
             return res.status(400).json({ error: error.message })
@@ -1042,6 +1082,30 @@ exports.geocodeLocation = async (req, res) => {
         res.json(coords)
     } catch (err) {
         console.error('geocodeLocation exception:', err)
+        res.status(500).json({ error: 'Server error' })
+    }
+}
+
+// Validate GPS coordinates
+exports.validateCoords = async (req, res) => {
+    try {
+        const { latitude, longitude } = req.body
+        const validation = validateCoordinates(latitude, longitude)
+        res.json(validation)
+    } catch (err) {
+        console.error('validateCoords exception:', err)
+        res.status(500).json({ error: 'Server error' })
+    }
+}
+
+// Validate and geocode a location string
+exports.validateLocation = async (req, res) => {
+    try {
+        const { location } = req.body
+        const validation = await validateAndGeocodeLocation(location)
+        res.json(validation)
+    } catch (err) {
+        console.error('validateLocation exception:', err)
         res.status(500).json({ error: 'Server error' })
     }
 }

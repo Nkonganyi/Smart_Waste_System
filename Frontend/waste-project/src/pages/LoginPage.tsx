@@ -1,13 +1,21 @@
 import { useState } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
+import { useNavigate, useLocation, Link } from 'react-router-dom'
 import { authAPI } from '@/lib/api'
 import { useAuthStore } from '@/stores/authStore'
-import { Globe, Mail, Lock, Loader2, ArrowRight } from 'lucide-react'
+import { Globe, Mail, Lock, Loader2, ArrowRight, CheckCircle2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 
+const DASHBOARD_BY_ROLE: Record<string, string> = {
+  citizen: '/citizen',
+  collector: '/collector',
+  admin: '/admin',
+}
+
 export function LoginPage() {
   const navigate = useNavigate()
+  const location = useLocation()
+  const stateMessage = (location.state as any)?.message as string | undefined
   const login = useAuthStore((state) => state.login)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -22,7 +30,7 @@ export function LoginPage() {
       const response = await authAPI.login(formData)
       const { user, token } = response.data
       login(user, token)
-      navigate('/')
+      navigate(DASHBOARD_BY_ROLE[user.role] ?? '/')
     } catch (err: any) {
       setError(err.response?.data?.message || 'Invalid email or password. Please try again.')
     } finally {
@@ -52,6 +60,12 @@ export function LoginPage() {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
+          {stateMessage && (
+            <div className="bg-emerald-50 border border-emerald-100 text-emerald-700 px-4 py-3 rounded-2xl text-sm font-bold flex items-center gap-2 dark:bg-emerald-500/10 dark:border-emerald-500/20 dark:text-emerald-300">
+              <CheckCircle2 className="h-4 w-4 shrink-0" />
+              {stateMessage}
+            </div>
+          )}
           {error && (
             <div className="bg-rose-50 border border-rose-100 text-rose-600 px-4 py-3 rounded-2xl text-sm font-bold flex items-center gap-2 dark:bg-rose-500/10 dark:border-rose-500/20">
               <span className="h-2 w-2 rounded-full bg-rose-600" />

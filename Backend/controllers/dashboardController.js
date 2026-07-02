@@ -268,3 +268,88 @@ exports.getCollectorPerformance = async (req, res) => {
         res.status(500).json({ error: "Server error" })
     }
 }
+
+// Get completed tasks (admin only)
+exports.getCompletedTasks = async (req, res) => {
+    try {
+        const daysParam = parseInt(req.query.days, 10)
+        const periodDays = Number.isFinite(daysParam) && daysParam > 0 ? daysParam : 7
+
+        const now = new Date()
+        const startDate = new Date(now.getTime() - periodDays * 24 * 60 * 60 * 1000)
+
+        const { data: completedReports, error } = await supabase
+            .from("reports")
+            .select("id, title, location, priority, status, completed_at, users(name, email)")
+            .eq("status", "completed")
+            .gte("completed_at", startDate.toISOString())
+            .order("completed_at", { ascending: false })
+
+        if (error) {
+            return res.status(400).json({ error: error.message })
+        }
+
+        res.json(completedReports || [])
+    } catch (err) {
+        console.error("getCompletedTasks error:", err)
+        res.status(500).json({ error: "Server error" })
+    }
+}
+
+// Get system activity log (admin only)
+exports.getSystemActivity = async (req, res) => {
+    try {
+        const limitParam = parseInt(req.query.limit, 10)
+        const limit = Number.isFinite(limitParam) && limitParam > 0 ? limitParam : 50
+
+        // Fetch recent notifications as activity
+        const { data: notifications, error: notificationsError } = await supabase
+            .from("notifications")
+            .select("id, user_id, message, is_read, created_at, users(name, role)")
+            .order("created_at", { ascending: false })
+            .limit(limit)
+
+        if (notificationsError) {
+            return res.status(400).json({ error: notificationsError.message })
+        }
+
+        // Fetch recent report status changes (as another activity source)
+        const { data: recentReports, error: reportsError } = await supabase
+            .from("reports")
+            .select("id, title, status, created_at, user_id, users(name)")
+            .order("created_at", { ascending: false })
+            .limit(20)
+
+        const activity = []
+
+        // Add notifications to activity
+        ;(notifications || []).forEach(notif => {
+            activity.push({
+                id: `notif-${notif.id}`,
+                type: "notification",
+                message: notif.message,
+                user: notif.users,
+                timestamp: notif.created_at
+            })
+        })
+
+        // Add report creation to activity
+        ;(recentReports || []).forEach(report => {
+            activity.push({
+                id: `report-${report.id}`,
+                type: "report_created",
+                message: `New report created: "${report.title}"`,
+                user: report.users,
+                timestamp: report.created_at
+            })
+        })
+
+        // Sort all activity by timestamp (newest first)
+        activity.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
+
+        res.json(activity.slice(0, limit))
+    } catch (err) {
+        console.error("getSystemActivity error:", err)
+        res.status(500).json({ error: "Server error" })
+    }
+}

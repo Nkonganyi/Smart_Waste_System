@@ -41,11 +41,11 @@ router.put(
     authorize(["admin"]),
     reportController.approveReport
 )
-// Update report status (collector only)
+// Update report status (assigned collector or admin)
 router.put(
     "/status",
     authenticate,
-    authorize(["collector"]),
+    authorize(["collector", "admin"]),
     reportController.updateReportStatus
 )
 router.get(
@@ -66,6 +66,18 @@ router.post(
     "/geocode",
     authenticate,
     reportController.geocodeLocation
+)
+// Validate GPS coordinates
+router.post(
+    "/validate-coords",
+    authenticate,
+    reportController.validateCoords
+)
+// Validate and geocode a location string
+router.post(
+    "/validate-location",
+    authenticate,
+    reportController.validateLocation
 )
 // Get my reports (citizens and collectors)
 router.get(

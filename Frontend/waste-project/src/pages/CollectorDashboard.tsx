@@ -22,6 +22,7 @@ import {
   PackageCheck
 } from 'lucide-react'
 import { DashboardLayout } from '@/components/layout/DashboardLayout'
+import { ReportDetailModal } from '@/components/ReportDetailModal'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { 
   Table, 
@@ -64,6 +65,8 @@ export function CollectorDashboard() {
   const [actionLoading, setActionLoading] = useState<string | null>(null)
   const [completionModalOpen, setCompletionModalOpen] = useState(false)
   const [selectedReport, setSelectedReport] = useState<Report | null>(null)
+  const [isDetailOpen, setIsDetailOpen] = useState(false)
+  const [detailReport, setDetailReport] = useState<Report | null>(null)
   const [completionFile, setCompletionFile] = useState<File | null>(null)
   const [uploadProgress, setUploadProgress] = useState<number>(0)
 
@@ -277,7 +280,14 @@ export function CollectorDashboard() {
                     </TableRow>
                   ) : (
                     reports.map((report) => (
-                      <TableRow key={report.id} className="group hover:bg-muted/30 transition-colors">
+                      <TableRow 
+                        key={report.id} 
+                        className="group hover:bg-muted/30 transition-colors cursor-pointer"
+                        onClick={() => {
+                          setDetailReport(report)
+                          setIsDetailOpen(true)
+                        }}
+                      >
                         <TableCell>
                           <div className="flex flex-col">
                             <span className="font-semibold text-foreground">{report.location}</span>
@@ -294,7 +304,7 @@ export function CollectorDashboard() {
                           {formatDistanceToNow(parseISO(report.created_at), { addSuffix: true })}
                         </TableCell>
                         <TableCell className="text-right">
-                          <div className="flex items-center justify-end gap-2">
+                          <div className="flex items-center justify-end gap-2" onClick={(e) => e.stopPropagation()}>
                             {report.status === 'pending' && (
                               <Button 
                                 size="sm" 
@@ -326,7 +336,7 @@ export function CollectorDashboard() {
                                   <MoreVertical size={16} />
                                 </Button>
                               </DropdownMenuTrigger>
-                              <DropdownMenuContent align="end">
+                              <DropdownMenuContent align="end" onClick={(e) => e.stopPropagation()}>
                                 <DropdownMenuItem className="gap-2">
                                   <ExternalLink size={14} /> Open in Maps
                                 </DropdownMenuItem>
@@ -464,6 +474,13 @@ export function CollectorDashboard() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Report Detail Modal */}
+      <ReportDetailModal 
+        report={detailReport} 
+        isOpen={isDetailOpen} 
+        onClose={() => setIsDetailOpen(false)} 
+      />
     </DashboardLayout>
   )
 }

@@ -7,6 +7,8 @@ import { LocationDistributionChart } from '@/components/dashboard/LocationDistri
 import { RecentReportsTable } from '@/components/dashboard/RecentReportsTable'
 import { DashboardMapPreview } from '@/components/dashboard/DashboardMapPreview'
 import { RecentActivity } from '@/components/dashboard/RecentActivity'
+import { CompletedTasksTable } from '@/components/dashboard/CompletedTasksTable'
+import { SystemActivityLog } from '@/components/dashboard/SystemActivityLog'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
 import { 
   Trash2, 
@@ -129,6 +131,12 @@ export function AdminDashboard() {
           <div className="grid gap-6 lg:grid-cols-5">
             <RecentReportsTable />
             <RecentActivity />
+          </div>
+
+          {/* Completed Tasks and System Activity */}
+          <div className="grid gap-6 lg:grid-cols-3">
+            <CompletedTasksTable />
+            <SystemActivityLog />
           </div>
 
           {/* Map Preview */}

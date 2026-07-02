@@ -3,6 +3,9 @@ import { useAuthStore } from '@/stores/authStore'
 import { AdminRoute, CollectorRoute, CitizenRoute } from '@/components/ProtectedRoute'
 import { LoginPage } from '@/pages/LoginPage'
 import { RegisterPage } from '@/pages/RegisterPage'
+import { VerifyEmailPage } from '@/pages/VerifyEmailPage'
+import { ForgotPasswordPage } from '@/pages/ForgotPasswordPage'
+import { ResetPasswordPage } from '@/pages/ResetPasswordPage'
 import { CitizenDashboard } from '@/pages/CitizenDashboard'
 import { CitizenReportForm } from '@/pages/CitizenReportForm'
 import { CitizenReportsPage } from '@/pages/CitizenReportsPage'
@@ -13,6 +16,7 @@ import { AdminDashboard } from '@/pages/AdminDashboard'
 import { UsersPage } from '@/pages/admin/UsersPage'
 import { ReportsPage } from '@/pages/admin/ReportsPage'
 import { RoutesPage } from '@/pages/admin/RoutesPage'
+import { NotificationsPage } from '@/pages/NotificationsPage'
 import { ToastContainer } from '@/components/ui/ToastContainer'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
 import './App.css'
@@ -26,6 +30,9 @@ export default function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
+          <Route path="/verify-email" element={<VerifyEmailPage />} />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
 
           <Route
             path="/citizen"
@@ -64,6 +71,15 @@ export default function App() {
           />
 
           <Route
+            path="/citizen/notifications"
+            element={
+              <CitizenRoute>
+                <NotificationsPage />
+              </CitizenRoute>
+            }
+          />
+
+          <Route
             path="/collector"
             element={
               <CollectorRoute>
@@ -77,6 +93,15 @@ export default function App() {
             element={
               <CollectorRoute>
                 <CollectorRoutesPage />
+              </CollectorRoute>
+            }
+          />
+
+          <Route
+            path="/collector/notifications"
+            element={
+              <CollectorRoute>
+                <NotificationsPage />
               </CollectorRoute>
             }
           />
@@ -113,6 +138,15 @@ export default function App() {
             element={
               <AdminRoute>
                 <RoutesPage />
+              </AdminRoute>
+            }
+          />
+
+          <Route
+            path="/admin/notifications"
+            element={
+              <AdminRoute>
+                <NotificationsPage />
               </AdminRoute>
             }
           />

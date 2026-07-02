@@ -1,0 +1,1568 @@
+1 
+ 
+TABLE OF CONTENT 
+ 
+DEDICATION……………………………………………………………………………………i 
+ACKNOWLEDGEMENT……………………………………………………………………….ii 
+ABSTRACT……………………………………………………………………………………..iii 
+LIST OF ABBREVATIONS…………………………………………………………………….iv 
+LIST OF FIGURES……………………………………………………………………………....v 
+LIST OF TABLES……………………………………………………………………………….vi 
+ TABLE OF CONTENT ............................................................................................................... vii 
+CHAPTER ONE ............................................................................................................................. 5 
+GENERAL INTRODUCTION ....................................................................................................... 5 
+1.1 Introduction ........................................................................................................................... 5 
+1.2 Background of the Study ....................................................................................................... 6 
+1.3 Statement of the Problem ...................................................................................................... 8 
+1.4 Objectives of the Study ......................................................................................................... 9 
+1.4.1 General Objective ........................................................................................................... 9 
+1.4.2 Specific Objectives ......................................................................................................... 9 
+1.6 Significance of the Study .................................................................................................... 10 
+1.7 Scope of the Study............................................................................................................... 10 
+1.8 Limitations of the Study ...................................................................................................... 11 
+1.9 Definition of Terms ............................................................................................................. 11 
+1.10 Organization of the Study ................................................................................................. 11 
+CHAPTER TWO .......................................................................................................................... 13 
+LITERATURE REVIEW ............................................................................................................. 13 
+2.1 Introduction ......................................................................................................................... 13 
+2.2 Review of Related Concepts or Conceptual Framework .................................................... 13 
+2.2.1 Smart Waste Management Systems ............................................................................. 13 
+2.2.2 Internet of Things (IoT) in Waste Management ........................................................... 13 
+2.2.3 Route Optimization and Scheduling Algorithms.......................................................... 14 
+2 
+ 
+2.2.4 Geographic Information Systems (GIS) and Mapping API Integration ....................... 15 
+2.3 Related Works ..................................................................................................................... 15 
+2.3.1 Intelligent Waste Sorting and Routing System for Smart Cities .................................. 15 
+Strengths ............................................................................................................................... 15 
+Limitations ........................................................................................................................... 16 
+2.3.2 IoT Based Automated Smart Waste Management System ........................................... 16 
+Strengths ............................................................................................................................... 17 
+Limitations ........................................................................................................................... 17 
+2.3.3 Smart Waste Management System (IoT Monitoring) .................................................. 17 
+Strengths ............................................................................................................................... 18 
+Limitations ........................................................................................................................... 18 
+2.3.4 Smart Garbage System for Food Waste Management .................................................. 18 
+Strengths ............................................................................................................................... 19 
+Limitations ........................................................................................................................... 19 
+2.3.5 IoT-Based Smart Bin Allocation and Vehicle Routing ................................................ 19 
+Strengths ............................................................................................................................... 20 
+Limitations ........................................................................................................................... 20 
+2.4 Research Gap....................................................................................................................... 21 
+2.5 Proposed Solution ............................................................................................................... 21 
+CHAPTER THREE ...................................................................................................................... 24 
+MATERIALS AND METHODS USED ...................................................................................... 24 
+3.1 Introduction ......................................................................................................................... 24 
+3.2 Development Methodology Used........................................................................................ 24 
+3.2.1 Incremental Development Methodology ...................................................................... 24 
+3.3 Tools and Materials Used .................................................................................................... 25 
+3.3.1 Hardware Requirements ............................................................................................... 25 
+3.3.2 Software Requirements ................................................................................................. 25 
+3.4 System Modules .................................................................................................................. 26 
+3.4.1 User Management Module ........................................................................................... 26 
+3.4.2 Waste Report Management Module ............................................................................. 26 
+3.4.3 Assignment and Scheduling Module ............................................................................ 26 
+3 
+ 
+3.4.4 Notification Module ..................................................................................................... 27 
+3.4.5 Location Validation Module ......................................................................................... 27 
+3.4.6 Reporting and Monitoring Module ............................................................................... 27 
+3.5 System Analysis .................................................................................................................. 27 
+3.5.1 Functional Requirements .............................................................................................. 27 
+3.5.2 Non-Functional Requirements ...................................................................................... 28 
+3.5.3 Cost Evaluation............................................................................................................. 28 
+3.5.4 Project Schedule ........................................................................................................... 29 
+3.5.5 Use Case Analysis ........................................................................................................ 29 
+3.5.6 Sequence Diagram(s) .................................................................................................... 30 
+3.5.7 Activity Diagram .......................................................................................................... 31 
+3.6 System Design ..................................................................................................................... 33 
+3.6.1 System Architecture ..................................................................................................... 33 
+3.6.2 Design Strategy............................................................................................................. 33 
+3.6.3 Class Diagram............................................................................................................... 33 
+3.6.4 Entity Relationship Diagram ........................................................................................ 34 
+3.6.5 Data Dictionary ............................................................................................................. 35 
+CHAPTER FOUR ......................................................................................................................... 38 
+IMPLEMENTATION, RESULTS AND TESTING .................................................................... 38 
+4.1 Introduction ......................................................................................................................... 38 
+4.2 System Implementation ....................................................................................................... 38 
+4.2.1 Backend API Implementation ...................................................................................... 38 
+4.2.2 Database Implementation and Interaction .................................................................... 39 
+4.2.3 Authentication and Authorization ................................................................................ 39 
+4.2.4 Waste Report Submission Process ............................................................................... 40 
+4.2.5 Scheduling and Assignment Mechanism ...................................................................... 40 
+4.2.6 Notification System ...................................................................................................... 41 
+4.3 Results ................................................................................................................................. 41 
+4.3.1 User Registration Interface ........................................................................................... 41 
+4.3.2 User Login Interface ..................................................................................................... 42 
+4.3.3 Waste Report Submission Interface ............................................................................. 43 
+4 
+ 
+4.3.4 Administrative Dashboard ............................................................................................ 43 
+4.3.5 Task Assignment Interface ........................................................................................... 44 
+4.3.6 Report Status Tracking ................................................................................................. 45 
+4.4 System Testing .................................................................................................................... 45 
+4.4.1 Unit Testing .................................................................................................................. 45 
+4.4.2 Integration Testing ........................................................................................................ 45 
+4.4.3 System Testing ............................................................................................................. 46 
+4.4.4 User Acceptance Testing .............................................................................................. 46 
+4.4.5 Test Case Results .......................................................................................................... 46 
+CHAPTER FIVE .......................................................................................................................... 48 
+SUMMARY, CONCLUSION AND RECOMMENDATIONS ................................................... 48 
+5.1 Discussion of Findings ........................................................................................................ 48 
+5.2 Conclusion ........................................................................................................................... 49 
+5.3 Recommendations ............................................................................................................... 49 
+5.4 Perspectives for Further Study ............................................................................................ 50 
+REFERENCES ............................................................................................................................. 52 
+ 
+ 
+ 
+ 
+5 
+ 
+CHAPTER ONE 
+GENERAL INTRODUCTION 
+1.1 Introduction 
+Waste management has become a critical environmental and public health concern, particularly 
+in rapidly urbanizing regions. In many developing countries, including Cameroon, the increasing 
+rate of population growth and urban expansion has led to a significant rise in solid waste 
+generation. However, waste collection and management systems have not evolved at the same 
+pace, resulting in inefficient waste disposal practices and environmental degradation. 
+In major urban centers such as Buea and Douala, waste management is often handled through 
+centralized systems operated by municipal councils and private contractors. Despite these efforts, 
+many areas still experience irregular waste collection, accumulation of garbage in public spaces, 
+and poor sanitation conditions. These challenges are largely attributed to limitations in 
+infrastructure, lack of real-time monitoring systems, and inefficient communication between 
+residents and waste management authorities. 
+Traditional waste management approaches in Cameroon typically rely on fixed collection 
+schedules and manual reporting mechanisms. As a result, waste collection services are often 
+unable to respond promptly to dynamic conditions such as overflowing bins or illegal dumping. 
+This leads to health risks, environmental pollution, and reduced quality of life for residents. 
+Advances in digital technology have introduced new opportunities to improve waste 
+management through the development of smart waste management systems. These systems 
+leverage modern technologies such as web applications, cloud computing, geographic 
+information systems (GIS), and route optimization algorithms to enhance waste collection 
+efficiency. By integrating real-time reporting mechanisms and intelligent scheduling techniques, 
+smart waste management systems can ensure that waste is collected more efficiently and that 
+collection resources are allocated appropriately. 
+The increasing adoption of smart city technologies has further encouraged the use of digital 
+platforms to monitor urban infrastructure and services. Within this context, waste management 
+6 
+ 
+systems can be improved by integrating digital reporting tools that allow residents to notify 
+waste management authorities when garbage bins are full. 
+This project proposes the design and development of a smart waste management and garbage 
+pickup scheduling system, a web-based platform designed to improve waste collection 
+efficiency by enabling resident reporting, intelligent scheduling, and route optimization. The 
+system aims to enhance communication between residents and waste management authorities 
+while supporting more efficient waste collection planning. 
+Through the implementation of this system, it is expected that waste collection operations can 
+become more responsive, data-driven, and transparent, thereby contributing to improved 
+sanitation and environmental sustainability within communities such as Buea. 
+1.2 Background of the Study 
+Effective waste management is a critical component of environmental sustainability and public 
+health. Rapid urbanization, population growth, and increased consumption have significantly 
+contributed to the rise in municipal solid waste generation across many developing countries. 
+Cities are increasingly struggling to cope with the volume of waste produced daily, which places 
+pressure on existing waste management infrastructures and operational systems [1]. 
+In many developing countries, including Cameroon, waste management services are largely 
+managed by municipal authorities in partnership with sanitation companies such as HYSACAM 
+(Hygiene and Sanitation of Cameroon). These institutions are responsible for waste collection, 
+transportation, and disposal within urban communities. Despite these efforts, waste accumulation 
+remains a persistent issue in several cities and towns due to logistical challenges, limited 
+infrastructure, financial constraints, and rapid urban expansion [2]. 
+Studies indicate that urban areas in Cameroon generate an average of 0.6 to 0.8 kilograms of 
+solid waste per person per day, resulting in thousands of tons of waste produced daily in major 
+cities [13], [14]. For instance, the city of Douala alone generates over 2,000 tons of waste per 
+day, while Yaoundé produces approximately 1,500 tons daily [14]. Despite these figures, only a 
+7 
+ 
+portion of this waste is effectively collected and properly disposed of, leaving a significant 
+amount uncollected in residential areas, streets, and drainage systems. 
+In areas such as Buea, waste accumulation is frequently observed in residential neighborhoods, 
+roadside locations, markets, and commercial areas. Garbage bins may overflow before scheduled 
+pickup times, and certain locations may experience irregular waste collection services. Residents 
+often lack a structured communication channel to report full bins, which further delays response 
+from waste management authorities. Consequently, these inefficiencies contribute to 
+environmental pollution, unpleasant odors, blockage of drainage systems, and increased risk of 
+disease outbreaks [3]. 
+Traditional waste collection methods in Cameroon rely heavily on fixed schedules and manual 
+monitoring. Waste collection trucks follow predetermined routes regardless of whether waste 
+bins are full or not. This approach leads to inefficiencies such as missed collections, overflowing 
+bins, and unnecessary resource usage. In addition, there is limited communication between 
+residents and waste management authorities, making it difficult to report urgent waste-related 
+issues in real time [4]. 
+In recent years, the emergence of digital technologies has enabled the development of smart 
+waste management systems designed to improve the efficiency of waste collection processes. 
+These systems integrate technologies such as the Internet of Things (IoT), geographic 
+information systems (GIS), cloud computing, and mobile/web applications to monitor waste 
+containers, analyze collection data, and optimize garbage collection routes [5]. 
+IoT-enabled waste management systems utilize sensors embedded within smart bins to monitor 
+fill levels in real time. When bins reach a predefined capacity threshold, the sensors transmit data 
+to a centralized monitoring system, which then schedules collection operations accordingly. This 
+approach ensures that waste is collected only when necessary, thereby improving operational 
+efficiency and reducing fuel consumption [6]. 
+Another key technology used in modern waste management systems is route optimization 
+algorithms, which determine the most efficient path for waste collection vehicles to follow when 
+servicing multiple locations. These algorithms are often modeled using the Vehicle Routing 
+8 
+ 
+Problem (VRP) and related computational methods such as Dijkstra’s algorithm, A* search, and 
+genetic algorithms. By calculating optimized routes, waste management authorities can reduce 
+travel time, minimize operational costs, and improve overall service delivery [7]. 
+Several developed cities around the world have already adopted smart waste management 
+systems as part of broader smart city initiatives. These systems enable authorities to monitor 
+waste levels in real time, allocate collection resources more efficiently, and maintain cleaner 
+urban environments. However, such technologies are still limited in many developing regions 
+due to infrastructure constraints, high implementation costs, and lack of technical integration [8]. 
+In Cameroon, the adoption of fully automated IoT-based waste monitoring systems remains 
+limited. Many communities continue to rely on manual reporting and fixed collection schedules, 
+which often fail to address real-time waste management needs. Furthermore, residents generally 
+lack a digital platform through which they can report waste accumulation or track collection 
+activities. 
+Therefore, there is a need for an intelligent, technology-driven waste management solution that 
+improves communication between residents and waste management authorities while optimizing 
+collection operations. This study proposes the design and development of a Smart Waste 
+Management and Garbage Pickup Scheduling System, a web-based platform that allows 
+residents to report waste accumulation while enabling administrators to schedule and optimize 
+waste collection routes. 
+By integrating resident reporting, automated scheduling mechanisms, and route optimization 
+strategies, the proposed system aims to improve operational efficiency, reduce waste 
+accumulation, and enhance sanitation management within communities. 
+1.3 Statement of the Problem 
+Despite the presence of waste management services provided by organizations such as 
+HYSACAM, garbage accumulation remains a persistent challenge in urban communities such as 
+Buea. Existing waste collection systems are often inefficient and unable to respond effectively to 
+the dynamic nature of waste generation in these areas. 
+9 
+ 
+One major limitation of the current system is its reliance on fixed collection schedules and 
+predetermined routes, regardless of the actual status of waste bins. As a result, some locations 
+experience delayed or irregular waste collection, while others are serviced even when bins are 
+not yet full. This leads to inefficient use of resources such as fuel, time, and manpower. In 
+addition, there is no structured or reliable platform that allows residents to report overflowing 
+bins or urgent waste-related issues in real time. 
+The absence of real-time communication between residents and waste management authorities 
+further worsens the situation, as issues may go unnoticed until scheduled collection times. 
+Consequently, waste accumulation in residential areas, markets, and public spaces contributes to 
+environmental pollution, unpleasant odors, blockage of drainage systems, and increased risk of 
+disease outbreaks. 
+These challenges highlight the limitations of traditional waste management approaches and 
+demonstrate the need for a more responsive and efficient system. Therefore, there is a need for a 
+smart, technology-driven waste management solution that enables real-time reporting, 
+prioritization of waste collection based on urgency, and optimized routing of garbage collection 
+vehicles. 
+1.4 Objectives of the Study 
+1.4.1 General Objective 
+To design and develop a Smart Waste Management & Garbage Pickup Scheduling System that 
+improves the efficiency, responsiveness, and transparency of waste collection services in 
+selected communities. 
+1.4.2 Specific Objectives 
+1. Design a web-based platform that allows residents to report full garbage bins. 
+2. Develop a scheduling module that prioritizes waste collection based on urgency and 
+location. 
+3. Implement route optimization techniques to generate efficient pickup routes for garbage 
+trucks. 
+10 
+ 
+4. Create an administrative dashboard for managing reports, schedules, and truck 
+assignments. 
+5. Provide a notification mechanism to update residents on the status of their reports. 
+6. Evaluate the system’s potential effectiveness in improving waste collection efficiency. 
+1.6 Significance of the Study 
+This study is significant to several stakeholders involved in waste management and urban 
+sanitation. 
+ Residents: The system provides residents with a convenient digital platform to report 
+waste accumulation, overflowing bins, and sanitation issues within their communities. 
+This enhances communication between residents and waste management authorities 
+while promoting community participation in environmental cleanliness. 
+ Waste Management Authorities: The proposed system improves operational efficiency 
+by providing tools for intelligent scheduling, route optimization, and centralized 
+monitoring of waste collection activities. This can help authorities allocate resources 
+more effectively and reduce operational costs. 
+ Local Communities: Improved waste collection efficiency contributes to cleaner 
+environments, reduced pollution, and better public health outcomes. Efficient waste 
+management also enhances the overall quality of life within urban communities. 
+ Academic Research: This study demonstrates the practical application of software 
+engineering concepts, algorithms, and database systems in solving real-world 
+environmental problems. It also contributes to research on smart city technologies and 
+digital waste management solutions. 
+ Policy Makers and Urban Planners: The system provides a technological framework 
+that can support smart city initiatives and sustainable urban development strategies within 
+Cameroon. 
+1.7 Scope of the Study 
+The study focuses on the design and prototype implementation of a web-based Smart Waste 
+Management System. The geographical scope is limited to Buea as case study areas. 
+11 
+ 
+The system will simulate scheduling and routing operations but will not involve physical 
+deployment of IoT hardware or integration with live municipal databases. 
+1.8 Limitations of the Study 
+The study is limited by: 
+ 
+Lack of direct access to operational data from waste management authorities 
+ 
+Prototype-based implementation rather than full-scale deployment 
+ 
+Dependence on simulated data for route optimization testing 
+1.9 Definition of Terms 
+ Smart Waste Management: The use of digital technologies and algorithms to improve 
+the efficiency and monitoring of waste collection processes. 
+ Route Optimization: The process of determining the most efficient path between 
+multiple locations to minimize travel time and fuel consumption. 
+ Scheduling Algorithm: A computational method used to determine the order and timing 
+of task execution. 
+ Garbage Pickup Scheduling: The planning and assignment of waste collection activities 
+based on priority and availability. 
+ Administrative Dashboard: A centralized interface used by system administrators to 
+manage operations and monitor activities. 
+ Prototype: An initial working model of a system developed for demonstration and 
+evaluation purposes. 
+1.10 Organization of the Study 
+This study is organized into five chapters: 
+ 
+Chapter One presents the general introduction, background, problem statement, 
+objectives, significance, scope, definition of terms, and organization of the study. 
+ 
+Chapter Two reviews related literature and existing waste management systems. 
+ 
+Chapter Three describes the system analysis and design methodology. 
+12 
+ 
+ 
+Chapter Four presents system implementation, testing, and results. 
+ 
+Chapter Five provides the summary, conclusion, and recommendations. 
+ 
+ 
+13 
+ 
+CHAPTER TWO 
+LITERATURE REVIEW 
+2.1 Introduction 
+This chapter reviews the theoretical foundations, key concepts, and existing research pertaining 
+to smart waste management systems. It explores related technologies such as IoT (Internet of 
+Things), route optimization, and intelligent scheduling methods. It also analyzes previous works 
+in order to identify research gaps and justify the proposed system. 
+2.2 Review of Related Concepts or Conceptual Framework 
+2.2.1 Smart Waste Management Systems 
+Smart waste management systems have become an important component of modern smart city 
+infrastructure because they enable real-time monitoring, efficient resource allocation, and 
+improved sanitation management [8], [12]. 
+Smart waste management systems use digital technologies such as sensors, embedded devices, 
+cloud computing, and web/mobile platforms to monitor waste container status, analyze data, and 
+automate collection activities [1]. These systems contrast with traditional manual collection by 
+enabling real-time monitoring, efficient resource allocation, and reduced operational costs. 
+Key Elements: 
+ 
+Smart bins with sensors 
+ 
+Data transmission 
+ 
+Centralized servers for processing and scheduling 
+ 
+Web or mobile dashboards for monitoring and alerts  
+ 
+ 
+2.2.2 Internet of Things (IoT) in Waste Management 
+14 
+ 
+IoT technologies have significantly improved waste monitoring by allowing sensors embedded 
+in bins to transmit fill-level data to centralized servers for analysis and scheduling [10]. 
+IoT refers to networked physical devices that communicate data over the internet [2]. In waste 
+management, IoT enables real-time reporting of bin status, automated alerts when bins are full, 
+and dynamic route adjustments based on data trends. 
+Common IoT components: 
+ 
+Ultrasonic sensors for fill level 
+ 
+GPS modules for location 
+ 
+Microcontrollers for data collection 
+ 
+Wireless communication 
+2.2.3 Route Optimization and Scheduling Algorithms 
+Waste collection routing is commonly modeled as a Vehicle Routing Problem (VRP), which 
+aims to determine optimal routes for servicing multiple locations while minimizing operational 
+costs [9]. 
+Route optimization algorithms determine the most efficient sequence of bin pickups to minimize 
+travel time and fuel consumption. This problem is commonly modeled as a variation of the 
+Vehicle Routing Problem [3]. Scheduling combines server logic and priority scoring to decide 
+which bins get collected first. 
+Common techniques: 
+ 
+Dijkstra’s Algorithm 
+ 
+A* Search 
+ 
+Genetic Algorithms 
+ 
+Travelling Salesman Problem approximations 
+Modern mapping platforms such as Google Maps Platform provide routing APIs that compute 
+optimized paths using real-time traffic data [4]. 
+15 
+ 
+2.2.4 Geographic Information Systems (GIS) and Mapping API Integration 
+GIS enables spatial visualization of waste locations and optimized routes. Integration with 
+mapping platforms (e.g., Google Maps API) allows real-time routing suggestions based on road 
+data, traffic conditions, and vehicle position [2]. 
+2.3 Related Works 
+Several researchers have proposed IoT-based waste monitoring systems and intelligent routing 
+mechanisms to improve waste collection efficiency in urban environments [8]–[11]. 
+2.3.1 Intelligent Waste Sorting and Routing System for Smart Cities 
+ 
+Project Name: Intelligent Waste Sorting and Routing System for Smart Cities 
+ 
+Authors: Praveen Kumar Naidu Rayanki & Bhavishya G 
+ 
+Technology Used: IoT-enabled smart bins, Machine Learning algorithms, Vehicle 
+Routing Problem (VRP) optimization 
+This study proposes an integrated smart waste management system combining IoT-enabled smart 
+bins, machine learning-based waste classification, and route optimization for waste collection 
+vehicles. Waste is automatically categorized into recyclable, organic, and non-recyclable types, 
+while bin fill levels are monitored in real time. A central system optimizes truck routes to reduce 
+fuel consumption, time, and carbon emissions. 
+Simulation and pilot results showed improvements in operational efficiency, including 
+reductions in fuel usage (29%), CO₂ emissions (27%), and collection time (35%). 
+The study concludes that the approach is practical for modern urban environments and 
+recommends future improvements such as predictive scheduling, fault tolerance mechanisms, 
+and large-scale city deployment. 
+However, the system relies heavily on IoT infrastructure and machine learning deployment, 
+which may increase implementation cost and complexity. 
+Strengths 
+16 
+ 
+ 
+Integrates IoT sensing, machine learning, and routing optimization into one unified 
+system. 
+ 
+Demonstrates measurable performance improvements (fuel, emissions, time). 
+ 
+Includes simulation and field pilot validation. 
+Limitations 
+ 
+Heavy dependence on IoT hardware infrastructure, which may increase deployment 
+costs. 
+ 
+Field testing appears limited in scale (small pilot). 
+ 
+Requires strong technical infrastructure (stable connectivity, sensor maintenance). 
+2.3.2 IoT Based Automated Smart Waste Management System 
+ 
+Project Name: IoT Based Automated Smart Waste Management System 
+ 
+Authors: Pavithra M, Alagu Esakkiammal N, Angel Melbha A, et al 
+ 
+Technology Used: Arduino Uno, GSM modem, ultrasonic sensors 
+The study proposes an IoT-based smart dustbin designed to automate waste disposal and 
+monitoring processes in urban environments. The system aims to address the increasing problem 
+of garbage accumulation caused by population growth and inefficient manual waste management 
+practices. 
+Unlike conventional dustbins that require manual opening and periodic inspection, the proposed 
+smart dustbin integrates sensor-based circuitry to automate its operation. A clap or foot-tap 
+detection sensor enables touchless opening of the bin lid, improving hygiene and user 
+convenience. Additionally, an ultrasonic sensor continuously monitors the fill level of the bin to 
+detect when it is nearing capacity. 
+When the garbage level reaches a predefined threshold, the system transmits real-time data via 
+the internet to a central monitoring system. This notification alerts waste collectors to empty the 
+specific bin before overflow occurs. The system also supports historical data tracking to analyze 
+fill patterns over time, enabling improved long-term waste management planning. 
+17 
+ 
+The authors emphasize that the prototype is simple in design, cost-effective, and suitable for 
+mass production. The system is intended for use in homes, offices, and public spaces, aiming to 
+reduce human effort and improve waste collection efficiency. 
+Strengths 
+ 
+Provides automated bin opening, improving hygiene. 
+ 
+Uses ultrasonic sensors for real-time fill-level monitoring. 
+ 
+Sends alert notifications when bins reach threshold levels.. 
+Limitations 
+ 
+Primarily hardware-focused; lacks advanced route optimization. 
+ 
+No intelligent scheduling mechanism for waste trucks. 
+ 
+Limited discussion of large-scale deployment. 
+ 
+Manual mobility constraints mentioned by authors. 
+2.3.3 Smart Waste Management System (IoT Monitoring) 
+ 
+Project Name: Smart Waste Management System 
+ 
+Authors: Ankit Kumar, Hritik Soni, Deepanshi Srivastava 
+ 
+Technology Used: IoT sensors and cloud monitoring 
+This study addresses the growing environmental and public health concerns associated with 
+improper waste disposal in urban environments. The authors highlight that traditional waste 
+monitoring systems are inefficient, labor-intensive, time-consuming, and unsuitable for modern 
+smart city infrastructure. 
+The proposed system implements an IoT-based real-time waste monitoring framework using 
+ultrasonic sensors and NodeMCU microcontrollers. The ultrasonic sensor continuously measures 
+the waste level inside the bin and determines the percentage of occupancy. When the bin reaches 
+85% capacity, the system triggers a notification alert to the garbage collector or relevant 
+management authority. 
+18 
+ 
+In addition to remote alerts, the system incorporates an LCD display connected through an I2C 
+converter to provide a visual representation of the bin’s fill level. If the bin is not emptied within 
+a defined time margin after reaching the threshold, the system continues to display warnings to 
+indicate delayed disposal. 
+The main objective of the system is to prevent overflow, reduce environmental littering, and 
+minimize health hazards caused by unattended waste bins. By ensuring timely waste collection, 
+the system promotes improved environmental hygiene in smart city environments. 
+Strengths 
+ 
+Real-time waste level detection using ultrasonic sensors. 
+ 
+Automated alert notification when bin reaches 85% capacity. 
+ 
+Visual display of fill percentage via LCD. 
+ 
+Suitable for smart city infrastructure integration. 
+Limitations 
+ 
+Focuses only on bin-level monitoring; no route optimization. 
+ 
+No intelligent scheduling or prioritization mechanism.. 
+ 
+No integration with resident reporting systems. 
+2.3.4 Smart Garbage System for Food Waste Management 
+ 
+Project Name: IoT-Based Smart Garbage System for Efficient Food Waste Management 
+ 
+Authors: Ramani P, Deivapraba T, Krishna Kumar G 
+ 
+Technology Used: IoT sensor integration, waste status reporting 
+This study proposes an IoT-based Smart Garbage System designed to replace traditional RFID-
+based garbage collection systems and improve food waste management efficiency. 
+The system consists of battery-powered Smart Garbage Bins that communicate with each other 
+through a wireless mesh network. A central router and server collect real-time data from the bins 
+19 
+ 
+for monitoring and service management. Unlike passive collection bins, the proposed system 
+actively exchanges information and enables data-driven decision-making. 
+Additionally, the system integrates an adaptive user-oriented charge policy aimed at encouraging 
+residents to reduce food waste. Through web-based services and incentive mechanisms, the 
+proposed system achieved approximately 33% reduction in food waste during implementation. 
+The authors also discuss sustainability improvements, such as the consideration of photovoltaic 
+(solar) power generation to extend battery life and the use of high-intensity plastic materials for 
+durability. 
+Strengths 
+ 
+Uses wireless mesh networking for inter-bin communication. 
+ 
+Incorporates energy-efficient operational strategies. 
+ 
+Achieved measurable improvements: 
+o 16% energy savings 
+o 33% reduction in food waste 
+Limitations 
+ 
+High maintenance cost compared to existing systems. 
+ 
+Dependence on battery-based power structure. 
+ 
+Infrastructure-heavy and potentially expensive for developing regions. 
+ 
+Focuses primarily on food waste rather than general solid waste. 
+2.3.5 IoT-Based Smart Bin Allocation and Vehicle Routing 
+ 
+Project Name: IoT-based Smart Bin Allocation and Vehicle Routing: A Case Study in 
+South Korea 
+ 
+Authors: ScienceDirect Research Article 
+ 
+Technology Used: IoT, advanced neighborhood search routing algorithm 
+20 
+ 
+This study addresses the problem of increasing waste generation due to rapid urbanization and 
+population growth. The authors highlight that irregular cleaning schedules and inefficient routing 
+lead to bin overflow and poor waste management. 
+The proposed system integrates IoT-enabled smart bins with a Central Monitoring System. The 
+fill level of each bin is continuously monitored and transmitted to the Central Monitoring 
+System, which then determines optimal waste collection routes. 
+A key innovation introduced in this paper is the time-dependent penalty concept. Waste 
+management authorities incur a penalty cost if bins are not emptied within a specified time after 
+reaching full capacity. This ensures timely collection and discourages service delays. 
+Additionally, the study introduces a neighbor-cleaning concept: when a filled bin is scheduled 
+for cleaning, nearby bins may also be collected to improve operational efficiency. 
+The algorithm’s effectiveness was validated using numerical experiments and benchmark 
+instances from the Traveling Salesman Problem Library. Results were compared against standard 
+Genetic Algorithm and traditional ACO approaches, demonstrating superior performance of the 
+proposed VNS–ACO method. 
+Strengths 
+ 
+Formulates waste collection as a formal Vehicle Routing Problem (VRP). 
+ 
+Introduces a time-dependent penalty model for delayed collection. 
+ 
+Includes sensitivity analysis for parameter validation. 
+ 
+Integrates IoT smart bins with centralized control. 
+ 
+Limitations 
+ 
+Heavy reliance on IoT infrastructure. 
+ 
+Algorithm complexity may require high computational resources. 
+ 
+Implementation feasibility in developing cities not deeply discussed. 
+21 
+ 
+2.4 Research Gap 
+Although several studies have proposed smart waste management systems using IoT sensors, 
+machine learning algorithms, and route optimization techniques, most existing solutions focus 
+primarily on hardware-based monitoring of waste bins. These systems rely heavily on sensor 
+infrastructure to detect fill levels and transmit data to central monitoring platforms. 
+While such systems can effectively monitor bin status, they often require expensive hardware 
+installations and stable connectivity infrastructure, which may not be feasible in many 
+developing regions. Furthermore, many of these solutions do not incorporate user-driven 
+reporting mechanisms that allow residents to directly notify waste management authorities of 
+sanitation issues. 
+Additionally, several studies emphasize route optimization algorithms for waste collection 
+vehicles, but they typically assume the availability of real-time sensor data. In environments 
+where IoT infrastructure is limited or unavailable, such approaches may not be practical. 
+Therefore, there is a need for a waste management solution that: 
+ 
+Does not rely heavily on IoT hardware  
+ 
+Allows residents to actively report waste issues  
+ 
+Supports intelligent scheduling of waste collection  
+ 
+Provides route optimization for waste collection vehicles  
+The proposed Smart Waste Management and Garbage Pickup Scheduling System aims to 
+address these limitations by integrating resident reporting, intelligent scheduling, and route 
+optimization within a single web-based platform designed for practical implementation in 
+communities such as Buea. 
+2.5 Proposed Solution 
+The proposed Smart Waste Management and Garbage Pickup Scheduling System aims to 
+address the limitations identified in existing waste management solutions by integrating digital 
+reporting mechanisms with intelligent scheduling and routing techniques. 
+22 
+ 
+Unlike many existing systems that depend primarily on IoT-based smart bins, the proposed 
+system emphasizes a community-driven reporting approach. Residents can submit reports 
+through a web-based interface whenever garbage accumulation or overflowing bins are observed. 
+This allows waste management authorities to receive real-time information about sanitation 
+issues without requiring extensive sensor infrastructure. 
+Once a report is submitted, the system stores the information in a centralized database and 
+processes it through a scheduling module. The scheduling engine prioritizes waste collection 
+requests based on factors such as urgency, location, and submission time. 
+To improve operational efficiency, the system also incorporates route optimization techniques to 
+determine the most efficient path for waste collection vehicles when servicing multiple locations. 
+By calculating optimized routes, the system helps reduce travel time, fuel consumption, and 
+operational costs. 
+Additionally, an administrative dashboard enables system administrators to monitor waste 
+reports, assign tasks to waste collectors, track collection progress, and analyze system 
+performance through reports and analytics. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+23 
+ 
+The overall system architecture consists of three major components: 
+ 
+Figure 1: Smart Waste Management System Architecture 
+1. User Interface Layer: Web interface for residents and administrators.  
+2. Application Layer: Handles scheduling logic, route optimization, and report processing.  
+3. Data Layer: Centralized database storing user accounts, reports, assignments, and 
+system logs.  
+By combining community participation with intelligent scheduling and route optimization, the 
+proposed system aims to improve waste collection efficiency while remaining practical for 
+deployment in environments with limited IoT infrastructure. 
+ 
+ 
+ 
+24 
+ 
+CHAPTER THREE 
+MATERIALS AND METHODS USED 
+3.1 Introduction 
+Before implementation began, the system was carefully analyzed and designed to ensure that it 
+meets both functional and non-functional requirements. This chapter explains the development 
+approach, tools, and system design techniques adopted. 
+The objective of this chapter is to provide a clear understanding of how the system was 
+developed, the materials used, and the design decisions made to ensure efficiency, scalability, 
+and reliability. 
+3.2 Development Methodology Used 
+3.2.1 Incremental Development Methodology 
+The Incremental Development Methodology was adopted for the development of the Smart 
+Waste Management and Garbage Pickup Scheduling System. Incremental development is a 
+software engineering approach in which a system is designed, implemented, and tested in small 
+functional units known as increments. Each increment adds new functionality to the existing 
+system until the complete application is developed [1]. 
+The development of the system was divided into the following stages: 
+ Requirement Gathering  
+ System Analysis  
+ System Design  
+ Incremental Module Development  
+ Testing and Validation  
+ System Integration  
+ Refinement and Documentation  
+The Incremental Development Methodology was particularly suitable for this project because the 
+system consists of several independent but related functional modules, including user 
+25 
+ 
+management, waste report management, task assignment and scheduling, notification 
+management, route optimization, and administrative monitoring. Rather than developing the 
+entire system at once, each module was implemented as a separate increment and tested before 
+proceeding to the next stage. 
+The incremental nature of the methodology enabled continuous verification and validation 
+throughout the development process. Errors identified in one increment could be corrected 
+before additional functionalities were introduced. For example, features such as duplicate report 
+detection, location validation, and role-based access control were tested and refined during their 
+respective development increments to improve system reliability and usability. 
+This approach reduced development risks, improved software quality, and simplified debugging 
+because problems could be isolated within specific increments rather than affecting the entire 
+system. It also allowed gradual expansion of system functionality while maintaining a stable 
+working version of the application throughout development. 
+The Incremental Development Methodology was preferred over the Waterfall model because it 
+supports the gradual delivery of functional modules and allows testing to be performed 
+throughout the development process rather than only at the end of the project. This made it 
+particularly suitable for a modular system such as the proposed Smart Waste Management and 
+Garbage Pickup Scheduling System [6]. 
+3.3 Tools and Materials Used 
+3.3.1 Hardware Requirements 
+The following hardware components were required: 
+ 
+Personal Computer (Minimum 4GB RAM) 
+ 
+Internet Connection 
+ 
+Storage device (for backups) 
+3.3.2 Software Requirements 
+The system was developed using the following software tools: 
+26 
+ 
+ 
+Frontend Framework: React 
+ 
+Programming Languages: TypeScript and JavaScript 
+ 
+Runtime Environment: Node.js 
+ 
+Database Management System: Supabase (PostgreSQL) 
+ 
+Code Editor: Visual Studio Code 
+ 
+Web Browser: Google Chrome 
+ 
+StarUML: System modeling and diagram design 
+3.4 System Modules 
+The system is divided into the following functional modules: 
+3.4.1 User Management Module 
+Handles: 
+ 
+User registration 
+ 
+Login and authentication 
+ 
+Email verification 
+ 
+Profile management 
+ 
+User suspension (admin controlled) 
+3.4.2 Waste Report Management Module 
+Handles: 
+ 
+Submission of waste reports 
+ 
+Image upload 
+ 
+Location capture and validation 
+ 
+Duplicate report detection 
+ 
+Report status tracking 
+3.4.3 Assignment and Scheduling Module 
+Handles: 
+27 
+ 
+ 
+Viewing pending reports 
+ 
+Assigning waste collectors 
+ 
+Updating assignment status 
+ 
+Tracking completion 
+3.4.4 Notification Module 
+Handles: 
+ 
+Email/SMS alerts 
+ 
+Assignment notifications 
+ 
+Status update notifications 
+ 
+Administrative alerts 
+3.4.5 Location Validation Module 
+Handles: 
+ 
+GPS coordinate validation 
+ 
+Integration with map service 
+ 
+Ensuring valid geographical locations 
+3.4.6 Reporting and Monitoring Module 
+Handles: 
+ 
+Administrative reporting 
+ 
+Tracking completed tasks 
+ 
+Monitoring system activity 
+3.5 System Analysis 
+3.5.1 Functional Requirements 
+The system shall: 
+1. Allow users to register and verify their accounts. 
+28 
+ 
+2. Allow users to log in securely. 
+3. Allow residents to submit waste reports. 
+4. Validate report details before submission. 
+5. Validate geographic location of reports. 
+6. Detect duplicate reports. 
+7. Allow Admin to review reports. 
+8. Allow Admin to approve or reject reports. 
+9. Allow Admin to assign waste collectors. 
+10. Allow collectors to update task status. 
+11. Notify users about report progress. 
+12. Allow administrators to suspend suspicious users. 
+13. Store all reports and assignment records in the database. 
+3.5.2 Non-Functional Requirements 
+The system shall: 
+1. Be accessible via web browsers. 
+2. Provide secure authentication and password encryption. 
+3. Ensure data integrity and consistency. 
+4. Provide fast response time (less than 3 seconds). 
+5. Be scalable for increased users. 
+6. Provide user-friendly interface. 
+7. Ensure availability and reliability. 
+8. Maintain data confidentiality. 
+3.5.3 Cost Evaluation 
+The estimated costs include: 
+Development Cost 
+ 
+Software tools: Free/Open-source 
+ 
+Development environment: Personal computer 
+29 
+ 
+Hosting Cost 
+ 
+Domain name registration (5,560FCFA–8,340FCFA/year) 
+ 
+Web hosting subscription (2,780FCFA–8,340FCFA /month) 
+3.5.4 Project Schedule 
+The project development was structured as follows: 
+Table 1: Project Schedule 
+Phase 
+Duration 
+Requirement Gathering 
+2 Week 
+System Analysis 
+1 Week 
+System Design & UML 
+1 Weeks 
+Database Design 
+1 Week 
+Module Development 
+3 Weeks 
+Testing & Debugging 
+1 Weeks 
+Documentation 
+1 Weeks 
+Total Estimated Duration: 10 Weeks 
+3.5.5 Use Case Analysis 
+The primary actors in the system include: 
+ 
+Resident 
+ 
+Administrator 
+ 
+Waste Collector 
+ 
+Notification Service (External) 
+ 
+Map Service (External) 
+Each actor interacts with the system according to their assigned roles, as represented in the Use 
+Case Diagram. 
+30 
+ 
+ 
+Figure 2: Use case diagram of the Smart Waste Management System 
+3.5.6 Sequence Diagram(s) 
+The system interactions were modeled using multiple sequence diagrams including: 
+ 
+User Registration 
+ 
+User Login 
+ 
+Waste Report Submission 
+ 
+Assignment Process 
+ 
+Status Update 
+These diagrams illustrate dynamic interaction between system components and external services. 
+31 
+ 
+ 
+Figure 3: Sequence Diagram for Waste Report Submission in the System 
+3.5.7 Activity Diagram 
+The Activity Diagram models the workflow of report submission, validation, approval, 
+assignment, and completion processes. 
+32 
+ 
+ 
+Figure 4: Activity Diagram for Report Submission and Completion Process 
+33 
+ 
+3.6 System Design 
+3.6.1 System Architecture 
+The system adopts a Three-Tier Architecture consisting of: 
+1. Presentation Layer (Web Interface) 
+2. Application Layer (Business Logic) 
+3. Data Layer (Database Server) 
+This architecture ensures separation of concerns and improves maintainability [1]. 
+3.6.2 Design Strategy 
+The system was designed using: 
+ 
+Object-Oriented Design principles 
+ 
+Modular programming approach 
+ 
+Role-based access control 
+ 
+Validation-first processing 
+[7] 
+3.6.3 Class Diagram 
+The class diagram models system objects including: 
+ 
+User 
+ 
+Resident 
+ 
+Administrator 
+ 
+Waste Collector 
+ 
+Waste Report 
+ 
+Assignment 
+ 
+Notification 
+ 
+Location Service 
+34 
+ 
+Inheritance, associations and dependencies were applied appropriately. 
+ 
+Figure 5: Class Diagram of the Smart Waste Management System 
+3.6.4 Entity Relationship Diagram 
+The ERD defines database structure including: 
+ 
+Users 
+ 
+Roles 
+ 
+WasteReports 
+ 
+Assignments 
+ 
+Notifications 
+Foreign key constraints were applied to maintain relational integrity. 
+35 
+ 
+ 
+Figure 6: Entity Relationship Diagram for the Smart Waste Management System 
+3.6.5 Data Dictionary 
+The Data Dictionary describes all database tables, attributes, data types, constraints, and 
+relationships used in the Smart Waste Management System. 
+Table 2: Users Table (Stores all system users including residents, Admins, and collectors.) 
+Field Name 
+Data Type 
+Size 
+Constraints 
+Description 
+user_id 
+INT 
+— 
+Primary Key, Auto Increment 
+Unique user ID 
+role_id 
+INT 
+— 
+Foreign Key → Roles(role_id) 
+User role reference 
+name 
+VARCHAR 
+100 
+Not Null 
+Full name 
+36 
+ 
+email 
+VARCHAR 
+100 
+Not Null, Unique 
+User email 
+phone 
+VARCHAR 
+20 
+Not Null 
+Phone number 
+password 
+VARCHAR 
+255 
+Not Null 
+Encrypted password 
+status 
+VARCHAR 
+20 
+Not Null 
+Active / Suspended 
+created_at 
+DATETIME 
+— 
+Default CURRENT_TIMESTAMP 
+Account creation date 
+ 
+Table 3: Reports Table (Stores waste reports submitted by residents) 
+Field Name 
+Data Type 
+Size 
+Constraints 
+Description 
+report_id 
+INT 
+— 
+Primary Key, Auto Increment 
+Unique report ID 
+user_id 
+INT 
+— 
+Foreign Key → Users(user_id) 
+Resident 
+who 
+submitted 
+report 
+latitude 
+DECIMAL 
+(10,8) Not Null 
+GPS Latitude 
+longitude 
+DECIMAL 
+(11,8) Not Null 
+GPS Longitude 
+description 
+TEXT 
+— 
+Not Null 
+Waste description 
+image_url 
+VARCHAR 
+255 
+Nullable 
+Uploaded image path 
+status 
+VARCHAR 
+20 
+Not Null 
+Pending 
+/ 
+Assigned 
+/ 
+Resolved / Rejected 
+date_submitted DATETIME — 
+Default 
+CURRENT_TIMESTAMP 
+Submission timestamp 
+ 
+Table 4: Assignments Table (Stores report-to-collector assignments.) 
+Field Name 
+Data Type 
+Size Constraints 
+Description 
+assignment_id 
+INT 
+— 
+Primary Key, Auto Increment 
+Unique assignment ID 
+report_id 
+INT 
+— 
+Foreign 
+Key 
+→ 
+Reports(report_id) 
+Related report 
+collector_id 
+INT 
+— 
+Foreign Key → Users(user_id) 
+Assigned 
+waste 
+collector 
+37 
+ 
+assigned_date 
+DATETIME — 
+Default 
+CURRENT_TIMESTAMP 
+Assignment date 
+completion_date DATETIME — 
+Nullable 
+Completion date 
+status 
+VARCHAR 
+20 
+Not Null 
+Assigned / Completed 
+ 
+Table 5: Notifications table (Stores system-generated notifications) 
+Field Name 
+Data Type 
+Size Constraints 
+Description 
+notification_id 
+INT 
+— 
+Primary Key, Auto Increment 
+Unique notification ID 
+user_id 
+INT 
+— 
+Foreign Key → Users(user_id) 
+Recipient 
+report_id 
+INT 
+— 
+Foreign Key → Reports(report_id) 
+Related report 
+message 
+TEXT 
+— 
+Not Null 
+Notification content 
+type 
+VARCHAR 
+50 
+Not Null 
+Email / SMS / System 
+date_sent 
+DATETIME 
+— 
+Default CURRENT_TIMESTAMP 
+Date sent 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+38 
+ 
+CHAPTER FOUR 
+IMPLEMENTATION, RESULTS AND TESTING 
+4.1 Introduction 
+This chapter presents a comprehensive explanation of the implementation, results, and testing of 
+the Smart Waste Management and Garbage Pickup Scheduling System. It provides a detailed 
+account of how the system was developed based on the design specifications outlined in Chapter 
+Three. Emphasis is placed on explaining how each component of the system was implemented, 
+how the different modules interact, and how the system performs under testing conditions. The 
+chapter also evaluates the system’s functionality and reliability through structured testing 
+strategies. 
+4.2 System Implementation 
+The Smart Waste Management System was implemented as a web-based application using a 
+three-tier architecture consisting of the presentation layer, application layer, and data layer. This 
+architectural approach ensures separation of concerns, making the system easier to manage, 
+maintain, and scale. 
+The presentation layer consists of the user interface, which was developed using React plus 
+TypeScript, and Tailwind CSS. This layer enables interaction between users and the system. The 
+application layer, implemented using Node.js, handles the core logic of the system, including 
+request processing, authentication, scheduling, and communication with the database. The data 
+layer is managed using Supabase, which provides a PostgreSQL-based relational database for 
+efficient data storage and retrieval. 
+The backend server acts as the central processing unit of the system. It receives HTTP requests 
+from the frontend, performs validation and business logic operations, interacts with the database, 
+and returns appropriate responses to the client. 
+4.2.1 Backend API Implementation 
+The backend of the system was designed using a RESTful API architecture, where different 
+endpoints are responsible for handling specific system operations. Each endpoint corresponds to 
+39 
+ 
+a particular functionality such as user registration, authentication, report submission, and task 
+assignment. 
+For instance, when a user submits a waste report, the frontend sends a POST request to the 
+appropriate API endpoint. The backend receives this request, validates the input data, and inserts 
+the report into the database. After successful insertion, the server responds with a confirmation 
+message, which is then displayed to the user. 
+This modular API structure ensures scalability, maintainability, and efficient communication 
+between system components. 
+4.2.2 Database Implementation and Interaction 
+The database for the system was implemented using Supabase, which provides a relational 
+database structure based on PostgreSQL. The database schema was defined using SQL migration 
+scripts, ensuring that all tables, relationships, and constraints were properly established. 
+The main tables in the system include Users, Reports, Assignments, and Notifications. These 
+tables are interconnected using foreign key relationships, which ensure referential integrity 
+within the system. 
+When a user submits a report, the backend executes an SQL INSERT operation to store the data 
+in the Reports table. Similarly, when an administrator assigns a task, the system updates the 
+Assignments table and links it to the corresponding report and collector. 
+The use of structured queries ensures efficient data retrieval and manipulation, allowing the 
+system to handle operations such as filtering reports, tracking assignments, and generating 
+notifications effectively. 
+4.2.3 Authentication and Authorization 
+Authentication and authorization are critical components of the system, ensuring that only 
+authorized users can access specific functionalities. The system implements user authentication 
+through login and registration processes, where user credentials are validated before granting 
+access. 
+40 
+ 
+Additionally, role-based access control is implemented to differentiate between residents, 
+administrators, and waste collectors. Each role has specific permissions, ensuring that users can 
+only perform actions relevant to their responsibilities. 
+For example, residents can submit reports, administrators can assign tasks, and collectors can 
+update task statuses. This structured access control enhances system security and ensures proper 
+workflow management. 
+4.2.4 Waste Report Submission Process 
+The waste report submission process is a core functionality of the system. It allows residents to 
+report waste-related issues by providing details such as location, description, and optional 
+images. 
+When a report is submitted, the system first validates the input data to ensure completeness and 
+correctness. It then checks for duplicate reports to prevent redundancy. Once validated, the report 
+is stored in the database with a status of ―Pending.‖ 
+This process ensures that all submitted reports are properly recorded and made available for 
+further processing by administrators. 
+4.2.5 Scheduling and Assignment Mechanism 
+The scheduling and assignment module is responsible for distributing waste collection tasks to 
+collectors. Administrators can view all pending reports and assign them based on priority and 
+location. 
+When a task is assigned, the system updates the assignment records in the database and changes 
+the report status accordingly. This ensures that each report is tracked from submission to 
+completion. 
+The scheduling mechanism improves efficiency by ensuring that urgent reports are handled 
+promptly and that tasks are distributed evenly among collectors. 
+ 
+ 
+41 
+ 
+4.2.6 Notification System  
+The notification system provides real-time updates to users regarding system activities. 
+Notifications are generated when specific events occur, such as report submission, task 
+assignment, or status updates. 
+These notifications are stored in the database and can be retrieved by users through the system 
+interface. This feature enhances communication between residents and waste management 
+authorities, ensuring transparency and responsiveness. 
+4.3 Results 
+The developed Smart Waste Management System was successfully implemented and tested, 
+demonstrating its ability to support real-time waste reporting, task assignment, and monitoring of 
+waste collection activities. 
+The system provides a user-friendly interface for both residents and administrators, ensuring ease 
+of interaction and efficient workflow management. Key system functionalities are illustrated 
+through the following interfaces. 
+4.3.1 User Registration Interface 
+ 
+ Figure 7: Registration Page 
+42 
+ 
+Figure 7 shows the user registration interface of the system. This page allows new users to create 
+an account by entering required details such as name, email, and password. Input validation 
+mechanisms ensure that all required fields are correctly filled before submission. Upon 
+successful registration, users are granted access to the system. 
+4.3.2 User Login Interface 
+ 
+Figure 8: Login Page 
+Figure 8 illustrates the login interface used by registered users to access the system. The system 
+authenticates user credentials and enforces secure access control. Invalid login attempts trigger 
+appropriate error messages to guide the user. 
+ 
+ 
+ 
+ 
+ 
+ 
+43 
+ 
+4.3.3 Waste Report Submission Interface 
+ 
+Figure 9: Waste Report Submission Interface 
+Figure 9 presents the waste report submission page. This interface enables residents to report 
+waste-related issues by providing a description, uploading an image, and specifying the location. 
+The system validates all inputs and ensures that duplicate reports are minimized before storing 
+the data in the database. 
+4.3.4 Administrative Dashboard 
+ 
+Figure 10: Admin Dashboard 
+44 
+ 
+Figure 10 shows the administrative dashboard, which provides a centralized view of all 
+submitted waste reports. Administrators can monitor system activity, review pending reports, and 
+manage assignments efficiently through this interface. 
+4.3.5 Task Assignment Interface 
+ 
+Figure 11: Assignment Interface 
+Figure 11 illustrates the task assignment interface, where administrators assign waste collection 
+tasks to available collectors. The system allows prioritization based on urgency and location, 
+ensuring efficient allocation of resources. 
+ 
+ 
+ 
+ 
+ 
+ 
+45 
+ 
+4.3.6 Report Status Tracking 
+ 
+Figure 12: Report Status Tracking 
+Figure 12 presents the report tracking interface, which allows users to monitor the progress of 
+their submitted reports. Status updates such as Pending, Assigned, and Completed provide 
+transparency and improve communication between residents and waste management authorities. 
+These results demonstrate that the system is capable of improving operational efficiency and 
+addressing key limitations of traditional waste management approaches. 
+4.4 System Testing 
+To ensure system reliability and correctness, multiple testing strategies were applied, including 
+unit testing, integration testing, system testing, and user acceptance testing. 
+4.4.1 Unit Testing 
+Individual system modules such as user authentication, report submission, and assignment 
+processing were tested independently to verify their correctness. Each module was validated 
+against expected outputs to ensure proper functionality. 
+4.4.2 Integration Testing 
+Integration testing was conducted to ensure that different modules interact correctly. For 
+example, the interaction between the report submission module and the database was tested to 
+confirm successful data storage and retrieval. 
+46 
+ 
+4.4.3 System Testing 
+System testing evaluated the overall performance of the application under normal operating 
+conditions. The system was tested for responsiveness, data consistency, and error handling. 
+4.4.4 User Acceptance Testing 
+User acceptance testing was carried out to assess usability and overall user experience. The 
+system was found to be intuitive and easy to navigate, with users able to perform key operations 
+without difficulty. 
+ 4.4.5 Test Case Results 
+Table 6: System Test Cases and Results 
+Test Case 
+Input 
+Expected Result 
+Actual Result 
+Status 
+User 
+Registration 
+Valid user details 
+Account created 
+successfully 
+Account created 
+Pass 
+User Login 
+Correct credentials Login successful 
+Login successful 
+Pass 
+Invalid Login 
+Wrong password 
+Error message displayed 
+Error displayed 
+Pass 
+Report 
+Submission 
+Valid report data 
+Report stored in 
+database 
+Report stored 
+Pass 
+Duplicate Report 
+Same location & 
+data 
+Duplicate prevented 
+Duplicate flagged 
+Pass 
+Task Assignment Assign collector 
+Assignment successful 
+Assignment 
+successful 
+Pass 
+Status Update 
+Mark as 
+completed 
+Status updated 
+Status updated 
+Pass 
+ 
+47 
+ 
+The results presented in Table 6 indicate that all major system functionalities performed as 
+expected. The system demonstrated high reliability, accurate data processing, and efficient 
+response handling under test conditions. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+48 
+ 
+CHAPTER FIVE 
+SUMMARY, CONCLUSION AND RECOMMENDATIONS 
+5.1 Discussion of Findings 
+The findings of this study demonstrate that the Smart Waste Management and Garbage Pickup 
+Scheduling System effectively addresses several limitations associated with traditional waste 
+management approaches in urban communities such as Buea. 
+One of the key findings is that the integration of a web-based reporting platform significantly 
+improves communication between residents and waste management authorities. Unlike 
+conventional systems that rely on fixed schedules and manual observation, the proposed system 
+enables residents to report waste accumulation in real time. This ensures that waste-related issues 
+are identified and addressed more promptly. 
+Additionally, the implementation of a scheduling mechanism allows waste collection tasks to be 
+prioritized based on urgency and location. This represents an improvement over traditional 
+collection methods where routes are fixed and do not reflect actual waste conditions. As a result, 
+the system reduces inefficiencies such as unnecessary trips to low-priority locations while 
+ensuring that critical areas receive timely attention. 
+The incorporation of structured task assignment and status tracking further enhances operational 
+transparency. Administrators are able to monitor report progress from submission to completion, 
+while residents can track the status of their reports. This level of visibility was not present in 
+existing systems and contributes to increased accountability. 
+Furthermore, the system demonstrates that effective waste management solutions do not 
+necessarily require heavy reliance on expensive IoT infrastructure. By leveraging user-generated 
+reports and intelligent scheduling, the system provides a practical and cost-effective alternative 
+suitable for developing environments. 
+Overall, the findings indicate that the system improves efficiency, responsiveness, and 
+coordination in waste management processes, thereby contributing to better sanitation outcomes 
+and environmental sustainability. 
+49 
+ 
+5.2 Conclusion 
+This study successfully achieved its primary objective of designing and developing a Smart 
+Waste Management and Garbage Pickup Scheduling System. The system provides a practical, 
+technology-driven solution to the challenges associated with inefficient waste collection 
+processes in urban communities. 
+By integrating real-time reporting, intelligent scheduling, and task management functionalities, 
+the system enhances communication between residents and waste management authorities while 
+improving the overall efficiency of waste collection operations. The implementation results 
+demonstrate that the system is capable of addressing key issues such as delayed waste collection, 
+inefficient resource utilization, and lack of transparency. 
+Unlike many existing solutions that depend heavily on IoT-based infrastructure, the proposed 
+system adopts a more accessible and cost-effective approach by utilizing a web-based platform. 
+This makes it more suitable for deployment in environments with limited technical 
+infrastructure. 
+In conclusion, the Smart Waste Management System represents a viable and scalable solution for 
+improving urban sanitation and supports the broader goal of sustainable environmental 
+management. 
+5.3 Recommendations 
+Based on the findings of this study, the following recommendations are proposed: 
+1. Adoption by Local Authorities 
+Municipal councils and waste management organizations should consider adopting 
+digital waste reporting and scheduling systems to improve operational efficiency and 
+service delivery.  
+2. Mobile Application Development 
+A mobile application version of the system should be developed to increase accessibility 
+and encourage wider user participation, especially among residents who rely primarily on 
+smartphones.  
+50 
+ 
+3. Integration with GPS and Mapping Services 
+Future implementations should integrate real-time GPS tracking and mapping services to 
+enhance route optimization and enable live monitoring of waste collection vehicles.  
+4. Public Awareness and User Engagement 
+Awareness campaigns should be conducted to educate residents on the importance of 
+using digital platforms to report waste issues, thereby improving community 
+participation.  
+5. Data-Driven Decision Making 
+Waste management authorities should leverage system-generated data for analysis and 
+planning, enabling better forecasting of waste generation patterns and resource allocation. 
+5.4 Perspectives for Further Study 
+While the system achieved its intended objectives, several areas can be explored for further 
+improvement and research: 
+1. Integration of Artificial Intelligence 
+Future systems could incorporate machine learning algorithms to predict waste 
+generation trends and automate scheduling decisions based on historical data.  
+2. IoT-Based Smart Bin Integration 
+Although this study minimized reliance on IoT infrastructure, future work could explore 
+hybrid systems that combine sensor-based monitoring with user reporting for improved 
+accuracy.  
+3. Scalability and Real-World Deployment 
+Further research should focus on deploying the system in real-world environments and 
+evaluating its performance at scale across multiple communities.  
+4. Offline Functionality 
+Given the limitations of internet connectivity in some regions, future versions of the 
+system could include offline capabilities with delayed synchronization.  
+51 
+ 
+5. Security Enhancements 
+Additional research can be conducted on improving system security, including advanced 
+authentication mechanisms and data protection strategies. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+52 
+ 
+REFERENCES 
+[1] I. Sommerville, Software Engineering, 10th ed. Boston, MA, USA: Pearson, 2016. 
+[2] M. Kleppmann, Designing Data-Intensive Applications. Sebastopol, CA, USA: O’Reilly 
+Media, 2017. 
+[3] A. Silberschatz, H. F. Korth, and S. Sudarshan, Database System Concepts, 6th ed. New 
+York, NY, USA: McGraw-Hill, 2011. 
+[4] Oracle Corporation, ―MySQL 8.0 Reference Manual,‖ 2023. [Online]. Available: 
+https://dev.mysql.com/doc/ 
+[5] K. Schwaber and M. Beedle, Agile Software Development with Scrum. Upper Saddle River, 
+NJ, USA: Prentice Hall, 2002. 
+[6] R. S. Pressman and B. R. Maxim, Software Engineering: A Practitioner’s Approach, 8th ed. 
+New York, NY, USA: McGraw-Hill, 2014. 
+[7] C. Larman, Applying UML and Patterns, 3rd ed. Upper Saddle River, NJ, USA: Prentice 
+Hall, 2004. 
+[8] A. Kumar, H. Soni, and D. Srivastava, ―Smart Waste Management System Using IoT 
+Monitoring,‖ IEEE Access, 2020. 
+[9] P. K. Naidu Rayanki and B. G., ―Intelligent Waste Sorting and Routing System for Smart 
+Cities,‖ ScienceDirect, 2021. 
+[10] M. Pavithra, N. Alagu Esakkiammal, and A. Melbha, ―IoT Based Automated Smart Waste 
+Management System,‖ IEEE Xplore, 2019. 
+[11] P. Ramani, T. Deivapraba, and G. Krishna Kumar, ―IoT-Based Smart Garbage System for 
+Efficient Food Waste Management,‖ ScienceDirect, 2020. 
+[12] E. Al-Masri, A. Diabat, and D. Svetinovic, ―Towards Sustainable Smart Waste Management 
+in Smart Cities: A Data-Driven Approach,‖ Sustainable Cities and Society, vol. 40, pp. 194–203, 
+2018. 
+53 
+ 
+[13] World Bank, ―What a Waste 2.0: A Global Snapshot of Solid Waste Management to 2050,‖ 
+2018. 
+[14] United Nations Environment Programme (UNEP), ―Africa Waste Management Outlook,‖ 
+2018. 
+[15] HYSACAM, ―Waste Management Services in Cameroon,‖ [Online]. Available: 
+https://www.hysacam-proprete.com 

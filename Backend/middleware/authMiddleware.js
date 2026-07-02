@@ -1,10 +1,13 @@
 const jwt = require("jsonwebtoken")
+const supabase = require("../config/supabase")
 
 /**
  * Authenticate user by verifying JWT token
  * Extracts token from Authorization header and validates signature/expiration
+ * Also re-checks suspension status against the DB so an admin suspending a
+ * user takes effect immediately, instead of waiting for the JWT to expire.
  */
-const authenticate = (req, res, next) => {
+const authenticate = async (req, res, next) => {
     try {
         const authHeader = req.headers.authorization
 
@@ -26,10 +29,9 @@ const authenticate = (req, res, next) => {
 
         const token = parts[1]
 
+        let decoded
         try {
-            const decoded = jwt.verify(token, process.env.JWT_SECRET)
-            req.user = decoded
-            next()
+            decoded = jwt.verify(token, process.env.JWT_SECRET)
         } catch (jwtError) {
             if (jwtError.name === "TokenExpiredError") {
                 return res.status(401).json({
@@ -45,6 +47,39 @@ const authenticate = (req, res, next) => {
             }
             throw jwtError
         }
+
+        // Re-check suspension status on every request so suspension/
+        // unsuspension by an admin is enforced immediately, not just at login.
+        const { data: currentUser, error } = await supabase
+            .from("users")
+            .select("id, is_suspended")
+            .eq("id", decoded.id)
+            .maybeSingle()
+
+        if (error) {
+            console.error("Authentication suspension check error:", error)
+            // Fail open on infra errors so a DB hiccup doesn't lock everyone out,
+            // but still rely on the JWT claims already verified above.
+            req.user = decoded
+            return next()
+        }
+
+        if (!currentUser) {
+            return res.status(401).json({
+                error: "Unauthorized",
+                message: "Account no longer exists. Please log in again."
+            })
+        }
+
+        if (currentUser.is_suspended) {
+            return res.status(403).json({
+                error: "Account suspended",
+                message: "Your account has been suspended. Contact administrator for details."
+            })
+        }
+
+        req.user = decoded
+        next()
     } catch (error) {
         console.error("Authentication error:", error)
         return res.status(500).json({

@@ -2,6 +2,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useAuthStore } from '@/stores/authStore'
 import { User, Globe, LogOut, FileText, PlusCircle, LayoutDashboard } from 'lucide-react'
 import { ThemeToggle } from '@/components/ThemeToggle'
+import { NotificationDropdown } from '@/components/NotificationDropdown'
 
 export function CitizenNavbar() {
   const { user, logout } = useAuthStore()
@@ -64,6 +65,8 @@ export function CitizenNavbar() {
             <span className="text-sm font-bold text-slate-900 dark:text-white">{user.name}</span>
             <span className="text-[10px] font-medium text-slate-500 uppercase tracking-wider mt-1">Citizen</span>
           </div>
+          
+          <NotificationDropdown />
           
           <div className="h-8 w-px bg-slate-200 dark:bg-slate-800 mx-2 hidden sm:block" />
 

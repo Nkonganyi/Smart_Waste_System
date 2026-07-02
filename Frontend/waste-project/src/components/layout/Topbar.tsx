@@ -1,8 +1,9 @@
-import { Bell, Search, User, LogOut, Settings, User as UserIcon, Globe } from 'lucide-react'
+import { Search, User, LogOut, Settings, User as UserIcon, Globe } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { ThemeToggle } from '@/components/ThemeToggle'
+import { NotificationDropdown } from '@/components/NotificationDropdown'
 import { useAuthStore } from '@/stores/authStore'
 import { useState } from 'react'
 import {
@@ -49,10 +50,7 @@ export function Topbar() {
       <div className="flex items-center gap-3">
           <ThemeToggle />
 
-        <Button variant="ghost" size="icon" className="relative text-muted-foreground hover:text-foreground">
-          <Bell size={20} />
-          <span className="absolute right-2 top-2 flex h-2 w-2 rounded-full bg-primary ring-2 ring-card" />
-        </Button>
+        <NotificationDropdown />
         
         <div className="h-6 w-px bg-border mx-1" />
 

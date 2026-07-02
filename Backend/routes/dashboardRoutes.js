@@ -38,4 +38,18 @@ router.get(
     authorize(["admin"]),
     dashboardController.getCollectorPerformance
 )
+// Completed tasks (admin only)
+router.get(
+    "/completed-tasks",
+    authenticate,
+    authorize(["admin"]),
+    dashboardController.getCompletedTasks
+)
+// System activity log (admin only)
+router.get(
+    "/activity",
+    authenticate,
+    authorize(["admin"]),
+    dashboardController.getSystemActivity
+)
 module.exports = router

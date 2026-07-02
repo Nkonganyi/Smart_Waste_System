@@ -8,6 +8,8 @@ export const authAPI = {
     apiClient.post('/auth/login', data),
   verifyEmail: (token: string) =>
     apiClient.get('/auth/verify-email', { params: { token } }),
+  resendVerification: (email: string) =>
+    apiClient.post('/auth/resend-verification', { email }),
   forgotPassword: (email: string) =>
     apiClient.post('/auth/forgot-password', { email }),
   resetPassword: (token: string, password: string) =>
@@ -34,6 +36,10 @@ export const reportsAPI = {
     apiClient.get('/reports/assigned/route'),
   geocodeLocation: (location: string) =>
     apiClient.post('/reports/geocode', { location }),
+  validateCoords: (latitude: number, longitude: number) =>
+    apiClient.post('/reports/validate-coords', { latitude, longitude }),
+  validateLocation: (location: string) =>
+    apiClient.post('/reports/validate-location', { location }),
   startReport: (reportId: string) =>
     apiClient.put('/reports/start', { report_id: reportId }),
   completeReport: (reportId: string, completionImageUrl: string) =>
@@ -52,6 +58,10 @@ export const reportsAPI = {
     apiClient.put('/reports/approve', { report_id: reportId }),
   rejectReport: (reportId: string, reason?: string) =>
     apiClient.put('/reports/reject', { report_id: reportId, reason }),
+  deleteReport: (reportId: string) =>
+    apiClient.delete('/reports', { data: { report_id: reportId } }),
+  restoreReport: (reportId: string) =>
+    apiClient.put('/reports/restore', { report_id: reportId }),
   getCollectors: () =>
     apiClient.get('/reports/collectors'),
 }
@@ -66,6 +76,12 @@ export const dashboardAPI = {
     apiClient.get('/dashboard/collectors'),
   getReportTrends: (days?: number) =>
     apiClient.get('/dashboard/trends', { params: { days } }),
+  getCollectorPerformance: () =>
+    apiClient.get('/dashboard/collector-performance'),
+  getCompletedTasks: (days?: number) =>
+    apiClient.get('/dashboard/completed-tasks', { params: { days } }),
+  getSystemActivity: (limit?: number) =>
+    apiClient.get('/dashboard/activity', { params: { limit } }),
 }
 
 // Notifications API
@@ -111,6 +127,11 @@ const uploadImages = (files: File[], onUploadProgress?: (progress: number) => vo
 export const userAPI = {
   getProfile: () => apiClient.get('/users/profile'),
   updateProfile: (data: { name?: string; phone?: string; address?: string }) => apiClient.put('/users/profile', data),
+  getAllUsers: () => apiClient.get('/admin/users'),
+  getUserById: (id: string) => apiClient.get(`/admin/users/${id}`),
+  suspendUser: (userId: string) => apiClient.post('/admin/suspend-user', { userId }),
+  unsuspendUser: (userId: string) => apiClient.post('/admin/unsuspend-user', { userId }),
+  verifyUser: (userId: string) => apiClient.post('/admin/verify-user', { userId }),
 }
 
 export const uploadAPI = {

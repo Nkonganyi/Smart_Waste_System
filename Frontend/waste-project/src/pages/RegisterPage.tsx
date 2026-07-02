@@ -34,7 +34,9 @@ export function RegisterPage() {
         password: formData.password,
         role: formData.role,
       })
-      navigate('/login', { state: { message: 'Registration successful. Please log in.' } })
+      navigate('/login', {
+        state: { message: `Account created! We've sent a verification link to ${formData.email}. Please check your inbox.` }
+      })
     } catch (err: any) {
       setError(err.response?.data?.message || 'Registration failed')
     } finally {
