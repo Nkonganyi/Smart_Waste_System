@@ -79,6 +79,12 @@ router.post(
     authenticate,
     reportController.validateLocation
 )
+// Reverse geocode coordinates to address
+router.post(
+    "/reverse-geocode",
+    authenticate,
+    reportController.reverseGeocode
+)
 // Get my reports (citizens and collectors)
 router.get(
     "/my",

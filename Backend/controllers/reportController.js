@@ -1,5 +1,5 @@
 const supabase = require("../config/supabase")
-const { geocode, getLocationSuggestions } = require("../utils/geocodingService")
+const { geocode, getLocationSuggestions, reverseGeocode } = require("../utils/geocodingService")
 const { validateCoordinates, validateAndGeocodeLocation } = require("../utils/locationValidation")
 const { optimizeRoute, getRouteGeometry } = require("../utils/routeService")
 
@@ -1106,6 +1106,25 @@ exports.validateLocation = async (req, res) => {
         res.json(validation)
     } catch (err) {
         console.error('validateLocation exception:', err)
+        res.status(500).json({ error: 'Server error' })
+    }
+}
+
+// Reverse geocode coordinates to an address
+exports.reverseGeocode = async (req, res) => {
+    try {
+        const { latitude, longitude } = req.body
+        if (!latitude || !longitude) {
+            return res.status(400).json({ error: 'Latitude and longitude are required' })
+        }
+        const address = await reverseGeocode(latitude, longitude)
+        if (address) {
+            res.json({ success: true, address })
+        } else {
+            res.json({ success: false, address: null, error: 'Could not find address for coordinates' })
+        }
+    } catch (err) {
+        console.error('reverseGeocode exception:', err)
         res.status(500).json({ error: 'Server error' })
     }
 }

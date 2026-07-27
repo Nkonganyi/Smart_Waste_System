@@ -78,4 +78,45 @@ const getLocationSuggestions = async (query) => {
     }
 };
 
-module.exports = { geocode, getLocationSuggestions };
+/**
+ * Reverse Geocoding Service using OpenCage Data API
+ * Converts geographic coordinates into a human-readable address.
+ * 
+ * @param {number} latitude - The latitude
+ * @param {number} longitude - The longitude
+ * @returns {Promise<string>} - The formatted address, or null if not found
+ */
+const reverseGeocode = async (latitude, longitude) => {
+    try {
+        const apiKey = process.env.OPENCAGE_API_KEY;
+        if (!apiKey) {
+            throw new Error("Geocoding service configuration error: API key missing.");
+        }
+
+        const url = "https://api.opencagedata.com/geocode/v1/json";
+        
+        const response = await axios.get(url, {
+            params: {
+                q: `${latitude},${longitude}`,
+                key: apiKey,
+                countrycode: "cm"
+            }
+        });
+
+        if (response.data && response.data.results && response.data.results.length > 0) {
+            return response.data.results[0].formatted;
+        }
+        
+        return null;
+        
+    } catch (error) {
+        if (error.response) {
+            console.error(`Reverse geocoding API error: ${error.response.data.status?.message || error.message}`);
+        } else {
+            console.error(`Reverse geocoding error: ${error.message}`);
+        }
+        return null;
+    }
+};
+
+module.exports = { geocode, getLocationSuggestions, reverseGeocode };

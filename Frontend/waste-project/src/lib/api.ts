@@ -40,6 +40,8 @@ export const reportsAPI = {
     apiClient.post('/reports/validate-coords', { latitude, longitude }),
   validateLocation: (location: string) =>
     apiClient.post('/reports/validate-location', { location }),
+  reverseGeocode: (latitude: number, longitude: number) =>
+    apiClient.post('/reports/reverse-geocode', { latitude, longitude }),
   startReport: (reportId: string) =>
     apiClient.put('/reports/start', { report_id: reportId }),
   completeReport: (reportId: string, completionImageUrl: string) =>

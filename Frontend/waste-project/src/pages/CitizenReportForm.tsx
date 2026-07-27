@@ -67,17 +67,34 @@ export function CitizenReportForm() {
       async (position) => {
         const { latitude, longitude } = position.coords
         setGpsCoords({ lat: latitude, lng: longitude })
+        // Set location to coordinates string as fallback
+        const coordsString = `${latitude.toFixed(6)}, ${longitude.toFixed(6)}`
+        setLocation(coordsString)
+        // Clear location errors since we filled it
+        setFieldErrors((prev) => ({ ...prev, location: '' }))
+        
         try {
-          // Validate coordinates
+          // First validate coordinates
           const validationRes = await reportsAPI.validateCoords(latitude, longitude)
           if (validationRes.data.valid) {
             setLocationValid(true)
-            addToast('GPS location acquired successfully!', 'success')
-          } else {
-            addToast('Invalid GPS coordinates', 'warning')
+          }
+          // Now try reverse geocoding to get a human-readable address
+          try {
+            const reverseRes = await reportsAPI.reverseGeocode(latitude, longitude)
+            if (reverseRes.data.success && reverseRes.data.address) {
+              setLocation(reverseRes.data.address)
+              addToast('GPS location acquired successfully!', 'success')
+            } else {
+              addToast('GPS location acquired successfully! (Using coordinates)', 'success')
+            }
+          } catch (reverseErr) {
+            console.error('Reverse geocoding failed:', reverseErr)
+            addToast('GPS location acquired successfully! (Using coordinates)', 'success')
           }
         } catch (err) {
           console.error(err)
+          addToast('GPS location acquired successfully! (Using coordinates)', 'success')
         } finally {
           setIsGettingLocation(false)
         }
@@ -378,7 +395,7 @@ export function CitizenReportForm() {
                       <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
                       <Input
                         id="location"
-                        placeholder="e.g., Molyko Junction, behind Soppo market"
+                        placeholder="e.g., Molyko Junction, behind Soppo market or 4.155, 9.231"
                         value={location}
                         onFocus={() => locationSuggestions.length > 0 && setShowSuggestions(true)}
                         onChange={(e) => {
