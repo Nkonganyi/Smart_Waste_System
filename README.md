@@ -4,9 +4,18 @@ A full-stack web application developed as my final-year project to improve waste
 
 ## Features
 - **User Roles**: Citizen, Collector, and Admin dashboards.
+  <img width="624" height="298" alt="image" src="https://github.com/user-attachments/assets/b9b11fff-f3c8-4469-a2a5-26d5343b87b0" />
+
 - **Waste Reporting**: Citizens can report waste with images and location.
+<img width="624" height="294" alt="image" src="https://github.com/user-attachments/assets/b6a24c30-ae32-4e7d-be91-70f492c55db1" />
+
+
 - **Logistics Optimization**: Automatic route optimization for collectors using OpenRouteService.
+  <img width="624" height="339" alt="image" src="https://github.com/user-attachments/assets/196e776e-710e-4943-a91c-18725047d1c6" />
+
 - **Real-time Analytics**: Admin dashboard with statistics and maps.
+  <img width="624" height="254" alt="image" src="https://github.com/user-attachments/assets/e8b7cd75-929c-458c-adc7-1853409c0e8c" />
+
 - **Verification System**: Email verification for all new accounts.
 
 ## Tech Stack
