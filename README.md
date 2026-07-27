@@ -1,6 +1,6 @@
 # Smart Waste System
 
-A comprehensive waste management and logistics platform built with Node.js, Express, and Supabase.
+A full-stack web application developed as my final-year project to improve waste collection through digital reporting, scheduling, and route optimization.
 
 ## Features
 - **User Roles**: Citizen, Collector, and Admin dashboards.
@@ -10,11 +10,11 @@ A comprehensive waste management and logistics platform built with Node.js, Expr
 - **Verification System**: Email verification for all new accounts.
 
 ## Tech Stack
+- **Frontend**: React, Tailwind CSS
 - **Backend**: Node.js, Express.js
 - **Database**: Supabase (PostgreSQL)
 - **Authentication**: JWT & Role-Based Access Control (RBAC)
 - **External APIs**: OpenCage (Geocoding), OpenRouteService (Logistics)
-- **Frontend**: Vanilla JS, CSS3, HTML5
 
 ## Getting Started
 
@@ -57,4 +57,12 @@ Run tests using:
 ```bash
 npm test
 ```
-*(Note: Testing suite is currently under implementation)*
+## Future Improvements
+
+- Google Maps Integration
+- Mobile Application
+- Real-time Notifications
+
+## Author
+
+Nkonganyi Blec Ketu
